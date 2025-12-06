@@ -575,29 +575,64 @@
       color: var(--muted);
     }
   </style>
+      .timeline {
+        border-left: 2px solid var(--border-subtle);
+        /* increased padding so there's room for a small city image */
+        padding-left: 2.8rem;
+        margin-left: 0.4rem;
+      }
+
+      .timeline-item {
+        position: relative;
+        margin-bottom: 1.3rem;
+      }
+
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -1.6rem;
+        top: 0.35rem;
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: var(--accent);
+        box-shadow: 0 0 0 5px rgba(79, 209, 197, 0.18);
+        z-index: 1; /* keep halo behind the city image */
+      }
+
+      /* Small circular city images placed next to each timeline item */
+      .timeline-city {
+        position: absolute;
+        left: -3.6rem; /* move image left of the content and near the dot */
+        top: -0.15rem;
+        width: 2.2rem;
+        height: 2.2rem;
+        border-radius: 999px;
+        object-fit: cover;
+        border: 2px solid rgba(5, 8, 20, 0.9);
+        box-shadow: 0 6px 14px rgba(0,0,0,0.45);
+        z-index: 2; /* sits above the decorative halo */
+        background: #111; /* fallback while image loads */
+      }
 </head>
 <body>
 <div class="page">
 
-              <img class="timeline-city" src="images/santiago.jpeg" alt="Santiago" />
   <!-- Header / Nav -->
   <header>
     <div class="nav-inner">
       <div class="logo">PHILIPP WEBER</div>
       <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('nav ul').classList.toggle('open')">
-              <img class="timeline-city" src="images/copenhagen.jpg" alt="Copenhagen" />
         Menu ▾
       </button>
       <nav>
         <ul>
           <li><a href="#research">Research</a></li>
-              <img class="timeline-city" src="images/heidelberg.jpeg" alt="City" />
           <li><a href="#science-communication">Science Communication</a></li>
           <li><a href="#teaching">Teaching</a></li>
           <li><a href="#cv">CV</a></li>
         </ul>
       </nav>
-              <img class="timeline-city" src="images/heidelberg.jpeg alt="City" />
     </div>
   </header>
 
@@ -839,26 +874,31 @@
           </div>
           <div class="timeline">
             <div class="timeline-item">
+              <img class="timeline-city" src="images/santiago.jpeg" alt="Santiago" />
               <div class="timeline-role">Postdoctoral Researcher</div>
               <div class="timeline-inst">Physics Department / Universidad de Santiago</div>
               <div class="timeline-meta">2022 – present · Santiago, Chile</div>
             </div>
             <div class="timeline-item">
+              <img class="timeline-city" src="images/santiago.jpeg" alt="Santiago" />
               <div class="timeline-role">Postdoctoral Researcher</div>
               <div class="timeline-inst">Astronomy Department / Universidad de Chile</div>
               <div class="timeline-meta">2020 – 2022 · Santiago, Chile</div>
             </div>
             <div class="timeline-item">
+              <img class="timeline-city" src="images/copenhagen.jpg" alt="Copenhagen" />
               <div class="timeline-role">PhD in Astrophysics</div>
               <div class="timeline-inst">Niels Bohr Institute, University of Copenhagen</div>
               <div class="timeline-meta">2016 – 2020 · Copenhagen, Denmark</div>
             </div>
             <div class="timeline-item">
+              <img class="timeline-city" src="images/heidelberg.jpeg" alt="Heidelberg" />
               <div class="timeline-role">MSc in Physics</div>
               <div class="timeline-inst">Universität Heidelberg</div>
               <div class="timeline-meta">2014 – 2016 · Heidelberg, Germany</div>
             </div>
             <div class="timeline-item">
+              <img class="timeline-city" src="images/heidelberg.jpeg" alt="Heidelberg" />
               <div class="timeline-role">BSc in Physics</div>
               <div class="timeline-inst">Universitǎt Heidelberg</div>
               <div class="timeline-meta">2010 – 2014 · Heidelberg, Germany</div>
