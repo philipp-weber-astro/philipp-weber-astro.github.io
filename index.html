@@ -497,10 +497,11 @@
     */
     .timeline-city {
       position: absolute;
-      right: -3.2rem; /* offset to the right of the item */
+      right: -0.6rem; /* moved closer to the content */
       top: 50%;
       transform: translateY(-50%);
       height: 90%; /* 90% of the timeline-item height */
+      max-height: 48px; /* cap size for tall items */
       aspect-ratio: 1 / 1; /* keep square (width = height) */
       border-radius: 50%;
       object-fit: cover;
