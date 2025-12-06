@@ -465,7 +465,10 @@
 
     .timeline {
       border-left: 2px solid var(--border-subtle);
-      padding-left: 1.9rem; /* increased to add space between line and content/bullet */
+      /* increased padding so there's room for a small city image */
+      padding-left: 2.8rem;
+      /* ensure there's space on the right so city images don't overlap neighboring column */
+      padding-right: 3.6rem;
       margin-left: 0.4rem;
     }
 
@@ -477,13 +480,34 @@
     .timeline-item::before {
       content: "";
       position: absolute;
-      left: -1.4rem;
-      top: 0.25rem;
+      left: -1.6rem;
+      top: 0.35rem;
       width: 10px;
       height: 10px;
       border-radius: 999px;
       background: var(--accent);
       box-shadow: 0 0 0 5px rgba(79, 209, 197, 0.18);
+      z-index: 1; /* keep halo behind the city image */
+    }
+
+    /* Small circular city images placed to the right of each timeline item.
+       - height: 90% of the timeline item's height
+       - keep square using aspect-ratio so border-radius makes a circle
+       - positioned to the right and vertically centered
+    */
+    .timeline-city {
+      position: absolute;
+      right: -3.2rem; /* offset to the right of the item */
+      top: 50%;
+      transform: translateY(-50%);
+      height: 90%; /* 90% of the timeline-item height */
+      aspect-ratio: 1 / 1; /* keep square (width = height) */
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(5, 8, 20, 0.9);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.45);
+      z-index: 2; /* sits above the decorative halo */
+      background: #111; /* fallback while image loads */
     }
 
     .timeline-role {
@@ -575,45 +599,6 @@
       color: var(--muted);
     }
   </style>
-      .timeline {
-        border-left: 2px solid var(--border-subtle);
-        /* increased padding so there's room for a small city image */
-        padding-left: 2.8rem;
-        margin-left: 0.4rem;
-      }
-
-      .timeline-item {
-        position: relative;
-        margin-bottom: 1.3rem;
-      }
-
-      .timeline-item::before {
-        content: "";
-        position: absolute;
-        left: -1.6rem;
-        top: 0.35rem;
-        width: 10px;
-        height: 10px;
-        border-radius: 999px;
-        background: var(--accent);
-        box-shadow: 0 0 0 5px rgba(79, 209, 197, 0.18);
-        z-index: 1; /* keep halo behind the city image */
-      }
-
-      /* Small circular city images placed next to each timeline item */
-      .timeline-city {
-        position: absolute;
-        left: -3.6rem; /* move image left of the content and near the dot */
-        top: -0.15rem;
-        width: 2.2rem;
-        height: 2.2rem;
-        border-radius: 999px;
-        object-fit: cover;
-        border: 2px solid rgba(5, 8, 20, 0.9);
-        box-shadow: 0 6px 14px rgba(0,0,0,0.45);
-        z-index: 2; /* sits above the decorative halo */
-        background: #111; /* fallback while image loads */
-      }
 </head>
 <body>
 <div class="page">
