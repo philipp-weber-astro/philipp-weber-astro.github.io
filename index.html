@@ -416,6 +416,8 @@
       width: 100%;
       height: 160px;
       object-fit: cover;
+      /* keep the bottom of images visible; if cropping occurs, crop the top */
+      object-position: center bottom;
       display: block;
     }
 
@@ -784,7 +786,7 @@
         <!-- Outreach project 3 -->
         <article class="card">
           <div class="card-img">
-            <img src="images/fargo.png" alt="Students participating in a workshop" />
+            <img src="images/fargo2.png" alt="Students participating in a workshop" />
           </div>
           <div class="card-tag">Workshops &amp Schools </div>
           <div class="card-title">Organizing scientific interaction</div>
