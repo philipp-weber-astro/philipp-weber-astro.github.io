@@ -556,25 +556,8 @@
     }
 
     /*Gallery */
-    .gallery-wrapper {
-      position: relative;
-      margin-top: 1.2rem;
-    }
-
-    .gallery-horizontal {
-      display: flex;
-      gap: 1rem;
-      overflow-x: auto;
-      padding: 0.5rem 3.5rem;
-      scroll-behavior: smooth;
-      scrollbar-width: none; /* Firefox */
-    }
-
-    .gallery-horizontal::-webkit-scrollbar {
-      display: none; /* Chrome/Safari */
-    }
-    
     .gallery-item {
+      position: relative;   /* needed for overlay */
       flex: 0 0 auto;
       width: 260px;
       border-radius: 14px;
@@ -582,59 +565,40 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.4);
     }
     
-    .gallery-item img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      display: block;
-    }
-    
-    .gallery-arrow {
+    /* Dark overlay */
+    .gallery-overlay {
       position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 44px;
-      height: 44px;
-      border: 1px solid var(--border-subtle);
-      border-radius: 50%;
-      background: rgba(10, 16, 36, 0.9);
-      color: var(--text);
-      font-size: 1.4rem;
-      line-height: 1;
-      cursor: pointer;
-      z-index: 5;
-      transition: background var(--transition), transform var(--transition), border-color var(--transition);
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1rem;
+      transition: opacity 0.3s ease;
     }
     
-    .gallery-arrow:hover {
-      background: rgba(79, 209, 197, 0.15);
-      border-color: var(--accent);
+    /* Text */
+    .gallery-overlay p {
+      color: white;
+      font-size: 0.9rem;
+      line-height: 1.4;
     }
     
-    .gallery-arrow.left {
-      left: 0;
+    /* Hover effect */
+    .gallery-item:hover .gallery-overlay {
+      opacity: 1;
     }
     
-    .gallery-arrow.right {
-      right: 0;
+    /* Optional: slightly darken image smoothly */
+    .gallery-item img {
+      transition: filter 0.3s ease;
     }
     
-    @media (max-width: 720px) {
-      .gallery-horizontal {
-        padding: 0.5rem 2.8rem;
-      }
-    
-      .gallery-arrow {
-        width: 38px;
-        height: 38px;
-        font-size: 1.1rem;
-      }
-    
-      .gallery-item {
-        width: 220px;
-      }
-    }
-    
+    .gallery-item:hover img {
+      filter: brightness(60%);
+    }    
     /* Footer */
     footer {
       border-top: 1px solid var(--border-subtle);
@@ -835,19 +799,52 @@
       
         <div class="gallery-horizontal" id="science-gallery">
           <div class="gallery-item">
-            <img src="images/colegios/colegio_filadelfia.jpeg" alt="Space is the Place event">
+            <img src="images/colegios/colegio_filadelfia.jpeg" alt="">
+            <div class="gallery-overlay">
+              <p>Introduction to Astronomy in Colegio Filadelfia near Licanray.</p>
+            </div>
           </div>
           <div class="gallery-item">
             <img src="images/colegios/colegio_paraguay.jpeg" alt="Public outreach talk">
+            <div class="gallery-overlay">
+              <p>Introduction to Astronomy in Colegio Paraguay near Frutillar.</p>
+            </div>
           </div>
           <div class="gallery-item">
             <img src="images/colegios/colegio_penalolen.jpg" alt="Workshop event">
+            <div class="gallery-overlay">
+              <p>Introduction to Astronomy in a Liceo in Peñalolén.</p>
+            </div>
           </div>
           <div class="gallery-item">
             <img src="images/colegios/valdivia1.jpeg" alt="Astronomy image">
+            <div class="gallery-overlay">
+              <p>Introduction to Astronomy in Colegio Teniente Merino in Valdivias.</p>
+            </div>
           </div>
           <div class="gallery-item">
-            <img src="images/colegios/colegio_filadelfia2.jpeg" alt="Planet formation visual">
+            <img src="images/CMB/CMB_Puente_Alto_3.jpeg" alt="Planet formation visual">
+            <div class="gallery-overlay">
+              <p>Presentation of the CMB art project in Teatro Comunitario Puente Alto.</p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="images/CMB/CMB_Puente_Alto_2.jpeg" alt="Planet formation visual">
+            <div class="gallery-overlay">
+              <p>Presentation of the CMB art project in Teatro Comunitario Puente Alto.</p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="images/momentos_estelares/Puerto_Montt1.jpeg" alt="Planet formation visual">
+            <div class="gallery-overlay">
+              <p>Presentation of "Momentos Estelares" in public library of Puerto Montt</p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="images/momentos_estelares/Puerto_Varas.jpeg" alt="Planet formation visual">
+            <div class="gallery-overlay">
+              <p>Presentation of "Momentos Estelares" in public library of Puerto Montt</p>
+            </div>
           </div>
         </div>
 
