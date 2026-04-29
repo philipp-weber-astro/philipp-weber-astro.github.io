@@ -267,14 +267,10 @@
         <div class="xo-search-panel">
           <div class="xo-category-grid">
             <div class="xo-category-card">
-              <h3 data-i18n="institute">Institute</h3>
-              <div class="xo-help" data-i18n="singleFilter">Optional single-choice filter.</div>
-              <div class="xo-field"><label for="xo-institute" data-i18n="institute">Institute</label><select id="xo-institute" data-category="institute"></select></div>
-            </div>
-            <div class="xo-category-card">
-              <h3 data-i18n="city">City</h3>
-              <div class="xo-help" data-i18n="singleFilter">Optional single-choice filter.</div>
+              <h3 data-i18n="cityInstitute">City / institute</h3>
+              <div class="xo-help" data-i18n="cityInstituteHelp">Choose a city first; the institute list is then limited to institutes in that city.</div>
               <div class="xo-field"><label for="xo-city" data-i18n="city">City</label><select id="xo-city" data-category="city"></select></div>
+              <div class="xo-field" style="margin-top:0.65rem;"><label for="xo-institute" data-i18n="institute">Institute</label><select id="xo-institute" data-category="institute"></select></div>
             </div>
             <div class="xo-category-card">
               <h3 data-i18n="careerStage">Career stage</h3>
@@ -331,7 +327,7 @@
       chipPrototype: "Prototype with fictional entries", chipMatching: "Exact + near-match search", chipStatic: "Static GitHub Pages compatible",
       searchDatabase: "Search database", backMain: "Back to main site", mapTitle: "Institutes map", mapNote: "Click a cluster to zoom. Click an institute to search.", regionalView: "Regional view",
       searchEngine: "Search Engine", findTitle: "Find collaborators by tags", findSubtitle: "Choose only the fields you need. Exact matches are listed first. If you select more than two criteria, XO-Chile also lists people matching all but one criterion.",
-      institute: "Institute", city: "City", careerStage: "Career stage", singleFilter: "Optional single-choice filter.", scientificFocus: "Scientific focus", focusHelp: "Choose a main category and, optionally, a more specific sub-category.",
+      institute: "Institute", city: "City", cityInstitute: "City / institute", cityInstituteHelp: "Choose a city first; the institute list is then limited to institutes in that city.", careerStage: "Career stage", singleFilter: "Optional single-choice filter.", scientificFocus: "Scientific focus", focusHelp: "Choose a main category and, optionally, a more specific sub-category.",
       language: "Language", languageHelp: "Optional multi-choice filter. For example: Spanish + English.", skills: "Skills / tools", skillsHelp: "Optional multi-choice filter. For example: RADMC-3D + CASA.",
       addFocus: "+ Add another focus", addLanguage: "+ Add another language", addSkill: "+ Add another skill", clearSearch: "Clear search", fakeNote: "The current entries are fake placeholders and can later be replaced with real community data.",
       footerPrototype: "Prototype with fictional entries.", backTop: "Back to top ↑", mainSite: "Main site", any: "Any", noFilters: "No filters selected. Choose any category above or click an institute on the map.",
@@ -346,7 +342,7 @@
       chipPrototype: "Prototipo con entradas ficticias", chipMatching: "Búsqueda exacta + aproximada", chipStatic: "Compatible con GitHub Pages estático",
       searchDatabase: "Buscar en la base de datos", backMain: "Volver al sitio principal", mapTitle: "Mapa de institutos", mapNote: "Haz clic en un grupo para acercar. Haz clic en un instituto para buscar.", regionalView: "Vista regional",
       searchEngine: "Buscador", findTitle: "Encuentra colaboradores por etiquetas", findSubtitle: "Elige solo los campos que necesites. Las coincidencias exactas aparecen primero. Si seleccionas más de dos criterios, XO-Chile también muestra personas que cumplen todos menos uno.",
-      institute: "Instituto", city: "Ciudad", careerStage: "Etapa profesional", singleFilter: "Filtro opcional de selección única.", scientificFocus: "Foco científico", focusHelp: "Elige una categoría principal y, opcionalmente, una sub-categoría más específica.",
+      institute: "Instituto", city: "Ciudad", cityInstitute: "Ciudad / instituto", cityInstituteHelp: "Elige primero una ciudad; la lista de institutos se limita a esa ciudad.", careerStage: "Etapa profesional", singleFilter: "Filtro opcional de selección única.", scientificFocus: "Foco científico", focusHelp: "Elige una categoría principal y, opcionalmente, una sub-categoría más específica.",
       language: "Idioma", languageHelp: "Filtro opcional de selección múltiple. Por ejemplo: español + inglés.", skills: "Habilidades / herramientas", skillsHelp: "Filtro opcional de selección múltiple. Por ejemplo: RADMC-3D + CASA.",
       addFocus: "+ Añadir otro foco", addLanguage: "+ Añadir otro idioma", addSkill: "+ Añadir otra habilidad", clearSearch: "Limpiar búsqueda", fakeNote: "Las entradas actuales son ficticias y luego pueden reemplazarse por datos reales de la comunidad.",
       footerPrototype: "Prototipo con entradas ficticias.", backTop: "Volver arriba ↑", mainSite: "Sitio principal", any: "Cualquier", noFilters: "No hay filtros seleccionados. Elige una categoría o haz clic en un instituto del mapa.",
@@ -382,29 +378,31 @@
   ];
 
   const instituteCoords = {
-    "Universidad de Antofagasta": { city: "Antofagasta", x: 274, y: 80, dx: -18, dy: 0 },
-    "Universidad Católica del Norte": { city: "Antofagasta", x: 282, y: 93, dx: 18, dy: 7 },
-    "Universidad de La Serena": { city: "La Serena", x: 238, y: 245, dx: 0, dy: 0 },
-    "Universidad de Valparaíso": { city: "Valparaíso", x: 215, y: 355, dx: -22, dy: 0 },
-    "Universidad Andrés Bello": { city: "Viña del Mar", x: 220, y: 342, dx: 19, dy: -8 },
-    "Universidad de Chile": { city: "Santiago", x: 235, y: 378, dx: -22, dy: -12 },
-    "Pontificia Universidad Católica de Chile": { city: "Santiago", x: 241, y: 380, dx: 21, dy: -13 },
-    "Universidad Diego Portales": { city: "Santiago", x: 238, y: 386, dx: -10, dy: 15 },
-    "Universidad de Santiago de Chile": { city: "Santiago", x: 229, y: 383, dx: 18, dy: 17 },
-    "Universidad de Concepción": { city: "Concepción", x: 180, y: 560, dx: 0, dy: 0 }
+    /* Coordinates are tuned to the cropped stylised map: coast-to-inland offsets are represented more realistically,
+       with Santiago institutes placed east of Valparaíso/Viña del Mar and Concepción farther south-west. */
+    "Universidad de Antofagasta": { city: "Antofagasta", x: 253, y: 66, dx: -10, dy: 7 },
+    "Universidad Católica del Norte": { city: "Antofagasta", x: 260, y: 58, dx: 11, dy: -7 },
+    "Universidad de La Serena": { city: "La Serena", x: 225, y: 280, dx: 0, dy: 0 },
+    "Universidad de Valparaíso": { city: "Valparaíso", x: 197, y: 412, dx: 0, dy: 0 },
+    "Universidad Andrés Bello": { city: "Viña del Mar", x: 202, y: 398, dx: 0, dy: 0 },
+    "Universidad de Chile": { city: "Santiago", x: 242, y: 428, dx: -18, dy: -12 },
+    "Pontificia Universidad Católica de Chile": { city: "Santiago", x: 253, y: 425, dx: 19, dy: -10 },
+    "Universidad Diego Portales": { city: "Santiago", x: 247, y: 433, dx: -9, dy: 16 },
+    "Universidad de Santiago de Chile": { city: "Santiago", x: 238, y: 435, dx: 17, dy: 18 },
+    "Universidad de Concepción": { city: "Concepción", x: 158, y: 575, dx: 0, dy: 0 }
   };
 
   const cityCoords = {
-    "Antofagasta": { x: 278, y: 87, zoomBox: "210 40 130 100" },
-    "La Serena": { x: 238, y: 245, zoomBox: "185 205 120 100" },
-    "Valparaíso": { x: 218, y: 350, zoomBox: "170 315 110 90" },
-    "Viña del Mar": { x: 220, y: 342, zoomBox: "170 315 110 90" },
-    "Santiago": { x: 236, y: 381, zoomBox: "185 335 120 110" },
-    "Concepción": { x: 180, y: 560, zoomBox: "130 520 110 90" }
+    "Antofagasta": { x: 257, y: 62, zoomBox: "210 25 95 85" },
+    "La Serena": { x: 225, y: 280, zoomBox: "180 235 95 95" },
+    "Valparaíso": { x: 197, y: 412, zoomBox: "170 370 125 95" },
+    "Viña del Mar": { x: 202, y: 398, zoomBox: "170 370 125 95" },
+    "Santiago": { x: 245, y: 430, zoomBox: "205 390 100 90" },
+    "Concepción": { x: 158, y: 575, zoomBox: "125 535 90 80" }
   };
 
   const categories = { institute: "Institute", city: "City", careerStage: "Career stage", languages: "Language", skills: "Skills / tools" };
-  const singleCategories = ["institute", "city", "careerStage"];
+  const singleCategories = ["city", "institute", "careerStage"];
   const multiCategories = ["languages", "skills"];
 
   const selectedTags = document.getElementById("xo-selected-tags");
@@ -431,27 +429,69 @@
 
   function valuesForCategory(category) {
     const values = new Set();
-    people.forEach(person => { const entry = person[category]; Array.isArray(entry) ? entry.forEach(item => values.add(item)) : values.add(entry); });
+    people.forEach(person => {
+      const entry = person[category];
+      Array.isArray(entry) ? entry.forEach(item => values.add(item)) : values.add(entry);
+    });
     return Array.from(values).sort((a, b) => a.localeCompare(b));
   }
 
-  function addOptionsToSelect(select, category, customLabel) {
+  function institutesForCity(city) {
+    return valuesForCategory("institute").filter(inst => !city || instituteCoords[inst]?.city === city);
+  }
+
+  function addOptionsToSelect(select, category, customLabel, forcedValues = null) {
     const oldValue = select.value;
     select.innerHTML = "";
     const anyOption = document.createElement("option");
     anyOption.value = "";
     anyOption.textContent = customLabel || `${t("any")} ${categories[category].toLowerCase()}`;
     select.appendChild(anyOption);
-    valuesForCategory(category).forEach(value => { const option = document.createElement("option"); option.value = value; option.textContent = value; select.appendChild(option); });
+    const values = forcedValues || valuesForCategory(category);
+    values.forEach(value => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      select.appendChild(option);
+    });
     if ([...select.options].some(o => o.value === oldValue)) select.value = oldValue;
   }
 
+  function updateInstituteSelect() {
+    const citySelect = document.getElementById("xo-city");
+    const instituteSelect = document.getElementById("xo-institute");
+    addOptionsToSelect(instituteSelect, "institute", `${t("any")} ${t("institute").toLowerCase()}`, institutesForCity(citySelect.value));
+    selectedInstitute = instituteSelect.value;
+  }
+
   function populateSingleSelects() {
-    singleCategories.forEach(category => {
-      const select = document.querySelector(`select[data-category="${category}"]`);
-      addOptionsToSelect(select, category);
-      select.addEventListener("change", () => { selectedInstitute = document.getElementById("xo-institute").value; render(); renderMap(); });
+    const citySelect = document.getElementById("xo-city");
+    const instituteSelect = document.getElementById("xo-institute");
+    const careerSelect = document.getElementById("xo-careerStage");
+
+    addOptionsToSelect(citySelect, "city");
+    addOptionsToSelect(careerSelect, "careerStage");
+    updateInstituteSelect();
+
+    citySelect.addEventListener("change", () => {
+      updateInstituteSelect();
+      selectedInstitute = instituteSelect.value;
+      render();
+      renderMap();
     });
+
+    instituteSelect.addEventListener("change", () => {
+      selectedInstitute = instituteSelect.value;
+      if (selectedInstitute && instituteCoords[selectedInstitute]) {
+        citySelect.value = instituteCoords[selectedInstitute].city;
+        updateInstituteSelect();
+        instituteSelect.value = selectedInstitute;
+      }
+      render();
+      renderMap();
+    });
+
+    careerSelect.addEventListener("change", render);
   }
 
   function addSimpleMultiSelector(category, value = "") {
@@ -574,6 +614,7 @@
 
   function clearSearch({ keepInstitute = false } = {}) {
     document.querySelectorAll(".xo-search-panel select").forEach(select => { if (!(keepInstitute && select.id === "xo-institute")) select.value = ""; });
+    updateInstituteSelect();
     ["focus", ...multiCategories].forEach(category => { const stack = document.getElementById(`xo-${category}-stack`); stack.innerHTML = ""; category === "focus" ? addFocusSelector() : addSimpleMultiSelector(category); });
   }
 
@@ -621,14 +662,14 @@
     mapMarkers.innerHTML = "";
     const groups = groupInstitutesByCity();
     if (mapMode === "regional") {
-      mapSvg.setAttribute("viewBox", "120 0 240 620");
+      mapSvg.setAttribute("viewBox", "135 25 185 580");
       zoomLabel.textContent = t("regionalView");
       Object.entries(groups).forEach(([city, institutes]) => institutes.length > 1 ? addCluster(city, institutes) : addMarker(institutes[0], instituteCoords[institutes[0]], false));
     } else {
       mapSvg.setAttribute("viewBox", cityCoords[zoomedCity].zoomBox);
       zoomLabel.textContent = t("zoomedTo")(zoomedCity);
       Object.entries(groups).forEach(([city, institutes]) => {
-        if (city === zoomedCity || (zoomedCity === "Santiago" && ["Valparaíso", "Viña del Mar"].includes(city))) {
+        if (city === zoomedCity) {
           institutes.forEach(inst => addMarker(inst, instituteCoords[inst], true));
         }
       });
@@ -641,8 +682,12 @@
   function selectInstitute(inst) {
     selectedInstitute = inst;
     clearSearch();
-    const select = document.getElementById("xo-institute");
-    select.value = inst;
+    const citySelect = document.getElementById("xo-city");
+    const instituteSelect = document.getElementById("xo-institute");
+    citySelect.value = instituteCoords[inst].city;
+    updateInstituteSelect();
+    instituteSelect.value = inst;
+    selectedInstitute = inst;
     render();
     renderMap();
     document.getElementById("search").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -650,7 +695,15 @@
   }
 
   function rebuildDynamicLabels() {
-    singleCategories.forEach(category => { const select = document.querySelector(`select[data-category="${category}"]`); addOptionsToSelect(select, category); });
+    const citySelect = document.getElementById("xo-city");
+    const instSelect = document.getElementById("xo-institute");
+    const oldCity = citySelect.value;
+    const oldInst = instSelect.value;
+    addOptionsToSelect(citySelect, "city");
+    citySelect.value = oldCity;
+    updateInstituteSelect();
+    if ([...instSelect.options].some(o => o.value === oldInst)) instSelect.value = oldInst;
+    addOptionsToSelect(document.getElementById("xo-careerStage"), "careerStage");
     document.querySelectorAll("#xo-focus-stack .xo-selector-row").forEach(row => {
       const cat = row.querySelector('select[data-category="focusCategory"]').value;
       const sub = row.querySelector('select[data-category="focusSubcategory"]').value;
