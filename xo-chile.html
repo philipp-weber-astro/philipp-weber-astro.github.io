@@ -677,45 +677,125 @@
 
     .xo-hero-visual {
       position: relative;
-      min-height: 280px;
+      min-height: 420px;
       border-radius: 32px;
       overflow: hidden;
       background:
-        radial-gradient(circle at 25% 25%, rgba(79, 209, 197, 0.35), transparent 28%),
-        radial-gradient(circle at 75% 35%, rgba(154, 164, 198, 0.25), transparent 30%),
+        radial-gradient(circle at 24% 20%, rgba(79, 209, 197, 0.22), transparent 26%),
+        radial-gradient(circle at 80% 35%, rgba(154, 164, 198, 0.18), transparent 32%),
         linear-gradient(135deg, #29314e, #13182b);
       border: 1px solid rgba(255, 255, 255, 0.05);
       box-shadow: 0 14px 30px rgba(79, 209, 197, 0.35);
-      padding: 1.5rem;
-      display: flex;
-      align-items: flex-end;
+      padding: 1.15rem;
     }
 
-    .xo-hero-visual::before,
-    .xo-hero-visual::after {
-      content: "";
-      position: absolute;
-      border-radius: 999px;
-      border: 1px solid rgba(245, 247, 255, 0.16);
-      transform: rotate(-18deg);
-    }
-
-    .xo-hero-visual::before { width: 230px; height: 230px; right: -50px; top: -35px; }
-    .xo-hero-visual::after { width: 150px; height: 150px; left: -35px; bottom: -35px; }
-
-    .xo-visual-card {
+    .xo-map-header {
       position: relative;
-      z-index: 2;
+      z-index: 3;
       background: rgba(5, 8, 20, 0.72);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-lg);
-      padding: 1rem;
-      width: 100%;
+      padding: 0.85rem 1rem;
       backdrop-filter: blur(12px);
+      margin-bottom: 0.9rem;
     }
 
-    .xo-visual-card strong { display: block; font-size: 1.05rem; margin-bottom: 0.4rem; }
-    .xo-visual-card p { color: var(--muted); font-size: 0.88rem; margin: 0; }
+    .xo-map-header strong { display: block; font-size: 1.05rem; margin-bottom: 0.25rem; }
+    .xo-map-header p { color: var(--muted); font-size: 0.84rem; margin: 0; }
+
+    .xo-map-canvas {
+      position: relative;
+      height: 305px;
+      border-radius: 24px;
+      border: 1px solid var(--border-subtle);
+      background:
+        linear-gradient(90deg, rgba(79, 209, 197, 0.05), transparent 42%),
+        radial-gradient(circle at 45% 48%, rgba(79, 209, 197, 0.1), transparent 48%),
+        rgba(5, 8, 20, 0.45);
+      overflow: hidden;
+    }
+
+    .xo-chile-shape {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.88;
+      pointer-events: none;
+    }
+
+    .xo-map-dot {
+      position: absolute;
+      width: 0.95rem;
+      height: 0.95rem;
+      border-radius: 50%;
+      border: 2px solid rgba(5, 8, 20, 0.95);
+      background: var(--accent);
+      box-shadow: 0 0 0 5px rgba(79, 209, 197, 0.14), 0 8px 18px rgba(0, 0, 0, 0.35);
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      z-index: 4;
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+    }
+
+    .xo-map-dot:hover,
+    .xo-map-dot:focus,
+    .xo-map-dot.is-active {
+      transform: translate(-50%, -50%) scale(1.2);
+      box-shadow: 0 0 0 8px rgba(79, 209, 197, 0.18), 0 12px 24px rgba(0, 0, 0, 0.48);
+      outline: none;
+    }
+
+    .xo-map-dot.is-active {
+      background: #f5f7ff;
+    }
+
+    .xo-map-tooltip {
+      position: absolute;
+      left: 1.15rem;
+      top: 50%;
+      transform: translateY(-50%);
+      min-width: 185px;
+      max-width: 230px;
+      padding: 0.55rem 0.7rem;
+      border-radius: 12px;
+      background: rgba(5, 8, 20, 0.96);
+      border: 1px solid rgba(79, 209, 197, 0.45);
+      color: var(--text);
+      font-size: 0.78rem;
+      line-height: 1.25;
+      text-align: left;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition), transform var(--transition);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .xo-map-dot:hover .xo-map-tooltip,
+    .xo-map-dot:focus .xo-map-tooltip {
+      opacity: 1;
+      transform: translateY(-50%) translateX(0.15rem);
+    }
+
+    .xo-map-tooltip span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.72rem;
+      margin-top: 0.18rem;
+    }
+
+    .xo-map-note {
+      position: absolute;
+      left: 1rem;
+      bottom: 0.8rem;
+      z-index: 2;
+      color: var(--muted);
+      font-size: 0.76rem;
+      background: rgba(5, 8, 20, 0.65);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-pill);
+      padding: 0.24rem 0.65rem;
+    }
 
     .xo-search-panel {
       background: var(--card-bg);
@@ -960,10 +1040,49 @@
         </div>
       </div>
 
-      <div class="xo-hero-visual" aria-hidden="true">
-        <div class="xo-visual-card">
-          <strong>Example query</strong>
-          <p>Planet formation · Santiago · RADMC-3D · Spanish</p>
+      <div class="xo-hero-visual" aria-label="Map of Chile showing institute locations">
+        <div class="xo-map-header">
+          <strong>Institute map</strong>
+          <p>Hover over a dot to identify an institute. Click a dot to show all affiliated people.</p>
+        </div>
+        <div class="xo-map-canvas" id="xo-map-canvas">
+          <svg class="xo-chile-shape" viewBox="0 0 320 520" role="img" aria-label="Stylised map of Chile">
+            <path d="M155 18 C138 50 151 74 137 106 C124 136 133 162 118 194 C101 230 116 258 103 294 C91 329 104 360 93 394 C83 425 94 456 76 500" fill="none" stroke="rgba(245,247,255,0.24)" stroke-width="30" stroke-linecap="round" />
+            <path d="M164 18 C146 54 161 80 146 111 C134 139 143 166 128 199 C112 234 126 262 113 298 C101 333 115 365 103 398 C94 430 103 459 87 500" fill="none" stroke="rgba(79,209,197,0.30)" stroke-width="12" stroke-linecap="round" />
+          </svg>
+
+          <button class="xo-map-dot" type="button" style="left: 47%; top: 18%;" data-institute="Universidad de Antofagasta">
+            <span class="xo-map-tooltip">Universidad de Antofagasta<span>Antofagasta</span></span>
+          </button>
+          <button class="xo-map-dot" type="button" style="left: 54%; top: 21%;" data-institute="Universidad Católica del Norte">
+            <span class="xo-map-tooltip">Universidad Católica del Norte<span>Antofagasta</span></span>
+          </button>
+          <button class="xo-map-dot" type="button" style="left: 44%; top: 36%;" data-institute="Universidad de La Serena">
+            <span class="xo-map-tooltip">Universidad de La Serena<span>La Serena</span></span>
+          </button>
+          <button class="xo-map-dot" type="button" style="left: 50%; top: 46%;" data-institute="Universidad de Valparaíso">
+            <span class="xo-map-tooltip">Universidad de Valparaíso<span>Valparaíso</span></span>
+          </button>
+          <button class="xo-map-dot" type="button" style="left: 57%; top: 48%;" data-institute="Universidad Andrés Bello">
+            <span class="xo-map-tooltip">Universidad Andrés Bello<span>Viña del Mar</span></span>
+          </button>
+          <button class="xo-map-dot" type="button" style="left: 43%; top: 53%;" data-institute="Universidad de Chile">
+            <span class="xo-map-tooltip">Universidad de Chile<span>Santiago</span></span>
+          </button>
+          <button class="xo-map-dot" type="button" style="left: 51%; top: 55%;" data-institute="Pontificia Universidad Católica de Chile">
+            <span class="xo-map-tooltip">Pontificia Universidad Católica de Chile<span>Santiago</span></span>
+          </button>
+          <button class="xo-map-dot" type="button" style="left: 59%; top: 57%;" data-institute="Universidad Diego Portales">
+            <span class="xo-map-tooltip">Universidad Diego Portales<span>Santiago</span></span>
+          </button>
+          <button class="xo-map-dot" type="button" style="left: 47%; top: 61%;" data-institute="Universidad de Santiago de Chile">
+            <span class="xo-map-tooltip">Universidad de Santiago de Chile<span>Santiago</span></span>
+          </button>
+          <button class="xo-map-dot" type="button" style="left: 42%; top: 73%;" data-institute="Universidad de Concepción">
+            <span class="xo-map-tooltip">Universidad de Concepción<span>Concepción</span></span>
+          </button>
+
+          <div class="xo-map-note">Prototype locations, not a precise GIS map</div>
         </div>
       </div>
     </section>
@@ -1247,10 +1366,37 @@
     results.innerHTML = html;
   }
 
+  function updateActiveMapDots() {
+    const instituteSelect = document.getElementById("xo-institute");
+    const selectedInstitute = instituteSelect ? instituteSelect.value : "";
+    document.querySelectorAll(".xo-map-dot").forEach(dot => {
+      dot.classList.toggle("is-active", dot.dataset.institute === selectedInstitute);
+    });
+  }
+
+  function clearAllFilters() {
+    document.querySelectorAll(".xo-search-panel select").forEach(select => { select.value = ""; });
+
+    multiCategories.forEach(category => {
+      const stack = document.getElementById(`xo-${category}-stack`);
+      stack.innerHTML = "";
+      addMultiSelector(category);
+    });
+  }
+
+  function filterByInstitute(institute) {
+    clearAllFilters();
+    const instituteSelect = document.getElementById("xo-institute");
+    instituteSelect.value = institute;
+    render();
+    document.getElementById("search").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   function render() {
     const selectedCriteria = getSelectedCriteria();
     renderSelectedTags(selectedCriteria);
     renderResults(selectedCriteria);
+    updateActiveMapDots();
   }
 
   document.querySelectorAll("[data-add-category]").forEach(button => {
@@ -1261,15 +1407,12 @@
   });
 
   clearButton.addEventListener("click", () => {
-    document.querySelectorAll(".xo-search-panel select").forEach(select => { select.value = ""; });
-
-    multiCategories.forEach(category => {
-      const stack = document.getElementById(`xo-${category}-stack`);
-      stack.innerHTML = "";
-      addMultiSelector(category);
-    });
-
+    clearAllFilters();
     render();
+  });
+
+  document.querySelectorAll(".xo-map-dot").forEach(dot => {
+    dot.addEventListener("click", () => filterByInstitute(dot.dataset.institute));
   });
 
   populateSingleSelects();
