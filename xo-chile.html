@@ -6,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="XO-Chile: searchable legacy database for the Chilean exoplanet community." />
 
+  <!-- Leaflet / OpenStreetMap map support -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQPK9bqkGxD4AmP2D6KiY0PvvfKpIdA=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
   <style>
 
     :root {
@@ -918,45 +922,30 @@
     }
 
 
-    /* Interactive Chile institute map */
-    .xo-map-panel {
-      position: relative;
-      
-      border-radius: 32px;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 30% 15%, rgba(79, 209, 197, 0.24), transparent 28%),
-        radial-gradient(circle at 85% 55%, rgba(154, 164, 198, 0.16), transparent 35%),
-        linear-gradient(135deg, #29314e, #13182b);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      box-shadow: 0 14px 30px rgba(79, 209, 197, 0.35);
-      padding: 1rem;
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr) auto;
-      gap: 0.75rem;
-    }
-    .xo-map-header { position: relative; z-index: 3; display: flex; justify-content: space-between; align-items: flex-start; gap: 0.8rem; background: rgba(5, 8, 20, 0.68); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 0.55rem 0.65rem; backdrop-filter: blur(12px); }
+    /* Interactive OpenStreetMap institute map */
+    .xo-map-panel { position: relative; border-radius: 32px; overflow: hidden; background: radial-gradient(circle at 30% 15%, rgba(79, 209, 197, 0.24), transparent 28%), radial-gradient(circle at 85% 55%, rgba(154, 164, 198, 0.16), transparent 35%), linear-gradient(135deg, #29314e, #13182b); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 14px 30px rgba(79, 209, 197, 0.35); padding: 1rem; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 0.75rem; }
+    .xo-map-header { position: relative; z-index: 3; display: flex; justify-content: space-between; align-items: flex-start; gap: 0.8rem; background: rgba(5, 8, 20, 0.78); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 0.55rem 0.65rem; backdrop-filter: blur(12px); }
     .xo-map-header strong { display: block; font-size: 0.88rem; margin-bottom: 0.05rem; }
     .xo-map-header p { color: var(--muted); font-size: 0.68rem; margin: 0; line-height: 1.25; }
     .xo-map-back { display: none; white-space: nowrap; padding: 0.28rem 0.58rem; font-size: 0.68rem; }
     .xo-map-back.is-visible { display: inline-flex; }
-    .xo-map-wrap { position: relative; height: 74px; display: flex; align-items: center; justify-content: center; }
-    .xo-map-svg { width: 100%; height: 74px; overflow: visible; }
-    .xo-chile-shape { fill: rgba(245, 247, 255, 0.12); stroke: rgba(245, 247, 255, 0.55); stroke-width: 2.1; filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.45)); }
-    .xo-map-region-label { fill: rgba(154, 164, 198, 0.72); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
-    .xo-map-marker, .xo-map-cluster { cursor: pointer; outline: none; }
-    .xo-map-marker circle, .xo-map-cluster circle { transition: r var(--transition), fill var(--transition), stroke var(--transition), filter var(--transition); filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.55)); }
-    .xo-map-marker circle { fill: var(--accent); stroke: #050814; stroke-width: 2.5; }
-    .xo-map-marker:hover circle, .xo-map-marker:focus circle, .xo-map-marker.is-active circle { r: 7.5; stroke: #ffffff; filter: drop-shadow(0 0 10px rgba(79, 209, 197, 0.9)); }
-    .xo-map-cluster circle { fill: rgba(79, 209, 197, 0.92); stroke: rgba(255, 255, 255, 0.92); stroke-width: 2.5; }
-    .xo-map-cluster:hover circle, .xo-map-cluster:focus circle { r: 17; filter: drop-shadow(0 0 12px rgba(79, 209, 197, 0.95)); }
-    .xo-map-cluster text { fill: #050814; font-weight: 800; font-size: 13px; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
-    .xo-map-marker-label { fill: var(--text); font-size: 10px; font-weight: 700; paint-order: stroke; stroke: rgba(5, 8, 20, 0.9); stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
-    .xo-map-tooltip { position: absolute; z-index: 5; max-width: 240px; pointer-events: none; opacity: 0; transform: translate(-50%, calc(-100% - 14px)); transition: opacity var(--transition); background: rgba(5, 8, 20, 0.94); border: 1px solid rgba(79, 209, 197, 0.45); border-radius: 14px; padding: 0.65rem 0.75rem; box-shadow: var(--shadow-soft); color: var(--text); font-size: 0.82rem; }
-    .xo-map-tooltip.is-visible { opacity: 1; }
-    .xo-map-tooltip span { display: block; color: var(--muted); font-size: 0.76rem; margin-top: 0.12rem; }
-    .xo-map-footer { color: var(--muted); font-size: 0.66rem; line-height: 1.25; background: rgba(5, 8, 20, 0.55); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 0.45rem 0.6rem; }
-    @media (max-width: 900px) { .xo-map-wrap { height: 88px; } .xo-map-svg { height: 88px; } }
+    .xo-map-wrap { position: relative; height: 210px; min-height: 210px; border-radius: 22px; overflow: hidden; border: 1px solid var(--border-subtle); background: rgba(5, 8, 20, 0.9); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03); }
+    #xo-osm-map { width: 100%; height: 100%; background: #0d1425; }
+    .xo-map-footer { color: var(--muted); font-size: 0.66rem; line-height: 1.25; background: rgba(5, 8, 20, 0.65); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 0.45rem 0.6rem; }
+    .leaflet-container { font-family: var(--font-sans); background: #0d1425; }
+    .leaflet-control-attribution { background: rgba(5, 8, 20, 0.76) !important; color: var(--muted) !important; font-size: 0.62rem !important; }
+    .leaflet-control-attribution a { color: var(--accent) !important; }
+    .leaflet-bar a { background: rgba(5, 8, 20, 0.88) !important; color: var(--accent) !important; border-bottom-color: var(--border-subtle) !important; }
+    .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: rgba(5, 8, 20, 0.96); color: var(--text); border: 1px solid rgba(79, 209, 197, 0.35); box-shadow: var(--shadow-soft); }
+    .leaflet-popup-content { margin: 0.7rem 0.85rem; font-size: 0.82rem; line-height: 1.35; }
+    .leaflet-popup-content span { color: var(--muted); }
+    .leaflet-popup-content button { margin-top: 0.5rem; border: 0; border-radius: var(--radius-pill); padding: 0.35rem 0.7rem; background: linear-gradient(135deg, var(--accent), #63e6be); color: #050814; font-weight: 700; cursor: pointer; font-family: var(--font-sans); }
+    .xo-leaflet-marker, .xo-leaflet-cluster { display: grid; place-items: center; border-radius: 999px; transform: translate(-50%, -50%); box-shadow: 0 8px 18px rgba(0, 0, 0, 0.58); }
+    .xo-leaflet-marker { width: 17px; height: 17px; background: var(--accent); border: 3px solid #050814; }
+    .xo-leaflet-marker.is-active { width: 21px; height: 21px; border-color: #ffffff; box-shadow: 0 0 0 5px rgba(79, 209, 197, 0.22), 0 0 15px rgba(79, 209, 197, 0.95); }
+    .xo-leaflet-cluster { width: 34px; height: 34px; background: rgba(79, 209, 197, 0.95); border: 3px solid rgba(255,255,255,0.94); color: #050814; font-weight: 900; font-size: 0.92rem; cursor: pointer; }
+    @media (max-width: 900px) { .xo-map-wrap { height: 240px; min-height: 240px; } }
+
 
   </style>
 
@@ -1010,10 +999,9 @@
           <button id="xo-map-back" class="btn btn-outline xo-map-back" type="button">← Chile view</button>
         </div>
         <div class="xo-map-wrap" id="xo-map-wrap">
-          <div id="xo-map-tooltip" class="xo-map-tooltip"></div>
-          <svg id="xo-map-svg" class="xo-map-svg" viewBox="154 165 74 285" preserveAspectRatio="none" role="img" aria-labelledby="xo-map-title xo-map-subtitle"></svg>
+          <div id="xo-osm-map" role="application" aria-label="OpenStreetMap map of Chilean institutes"></div>
         </div>
-        <div class="xo-map-footer" id="xo-map-footer">Numbered circles indicate cities with multiple institutes in the prototype database. The map is cropped to the region containing entries.</div>
+        <div class="xo-map-footer" id="xo-map-footer">Numbered circles indicate cities with multiple institutes in the prototype database. Click a cluster to zoom in, then click an institute to show affiliated people.</div>
       </div>
     </section>
 
@@ -1121,99 +1109,152 @@
   ];
 
   const instituteLocations = [
-    { institute: "Universidad de Antofagasta", city: "Antofagasta", x: 178, y: 188, localX: 166, localY: 188 },
-    { institute: "Universidad Católica del Norte", city: "Antofagasta", x: 184, y: 197, localX: 196, localY: 197 },
-    { institute: "Universidad de La Serena", city: "La Serena", x: 181, y: 274, localX: 181, localY: 274 },
-    { institute: "Universidad de Valparaíso", city: "Valparaíso", x: 183, y: 327, localX: 170, localY: 327 },
-    { institute: "Universidad Andrés Bello", city: "Viña del Mar", x: 187, y: 333, localX: 202, localY: 333 },
-    { institute: "Universidad de Chile", city: "Santiago", x: 200, y: 352, localX: 178, localY: 342 },
-    { institute: "Pontificia Universidad Católica de Chile", city: "Santiago", x: 205, y: 356, localX: 213, localY: 343 },
-    { institute: "Universidad Diego Portales", city: "Santiago", x: 196, y: 358, localX: 181, localY: 374 },
-    { institute: "Universidad de Santiago de Chile", city: "Santiago", x: 191, y: 351, localX: 216, localY: 374 },
-    { institute: "Universidad de Concepción", city: "Concepción", x: 196, y: 436, localX: 196, localY: 436 }
+    { institute: "Universidad de Antofagasta", city: "Antofagasta", lat: -23.7036, lon: -70.4200 },
+    { institute: "Universidad Católica del Norte", city: "Antofagasta", lat: -23.6804, lon: -70.4117 },
+    { institute: "Universidad de La Serena", city: "La Serena", lat: -29.9173, lon: -71.2425 },
+    { institute: "Universidad de Valparaíso", city: "Valparaíso", lat: -33.0472, lon: -71.6127 },
+    { institute: "Universidad Andrés Bello", city: "Viña del Mar", lat: -33.0250, lon: -71.5518 },
+    { institute: "Universidad de Chile", city: "Santiago", lat: -33.4445, lon: -70.6504 },
+    { institute: "Pontificia Universidad Católica de Chile", city: "Santiago", lat: -33.4410, lon: -70.6400 },
+    { institute: "Universidad Diego Portales", city: "Santiago", lat: -33.4492, lon: -70.6650 },
+    { institute: "Universidad de Santiago de Chile", city: "Santiago", lat: -33.4513, lon: -70.6860 },
+    { institute: "Universidad de Concepción", city: "Concepción", lat: -36.8270, lon: -73.0355 }
   ];
 
-  const cityViews = {
-    "Antofagasta": { viewBox: "158 168 52 48", label: "Antofagasta", labelX: 160, labelY: 176 },
-    "Santiago": { viewBox: "168 330 66 62", label: "Santiago", labelX: 171, labelY: 337 },
-    "Valparaíso": { viewBox: "160 314 58 36", label: "Valparaíso / Viña del Mar", labelX: 162, labelY: 321 }
-  };
+  let xoMap = null;
+  let xoMapLayer = null;
+  let xoMapMode = "regional";
 
-  const chilePath = "M205 36 C189 58 192 83 199 109 C207 138 194 157 181 181 C169 203 170 224 182 248 C194 271 190 293 177 314 C164 336 162 361 178 386 C195 413 197 438 183 466 C169 496 174 522 193 548 C210 573 211 600 198 628 C185 655 193 685 213 706 L236 693 C222 667 222 644 238 614 C252 588 248 558 230 531 C212 503 213 480 229 452 C245 424 241 394 222 366 C204 340 207 319 222 297 C238 273 241 244 224 217 C208 192 211 169 226 144 C240 120 239 91 224 66 C218 55 213 45 205 36 Z";
-  let currentMapCity = null;
+  const regionalBounds = L.latLngBounds([ -37.25, -73.65 ], [ -22.85, -69.95 ]);
 
-  function peopleForInstitute(institute) { return people.filter(person => person.institute === institute); }
-  function locationsGroupedByCity() { return instituteLocations.reduce((groups, item) => { if (!groups[item.city]) groups[item.city] = []; groups[item.city].push(item); return groups; }, {}); }
-  function showMapTooltip(event, html) { const tooltip = document.getElementById("xo-map-tooltip"); const wrap = document.getElementById("xo-map-wrap"); const rect = wrap.getBoundingClientRect(); tooltip.innerHTML = html; tooltip.style.left = `${event.clientX - rect.left}px`; tooltip.style.top = `${event.clientY - rect.top}px`; tooltip.classList.add("is-visible"); }
-  function hideMapTooltip() { document.getElementById("xo-map-tooltip").classList.remove("is-visible"); }
-
-  function selectInstituteFromMap(institute) {
-    document.querySelectorAll(".xo-search-panel select").forEach(select => { select.value = ""; });
-    multiCategories.forEach(category => { const stack = document.getElementById(`xo-${category}-stack`); stack.innerHTML = ""; addMultiSelector(category); });
-    const instituteSelect = document.getElementById("xo-institute");
-    instituteSelect.value = institute;
-    render();
-    document.getElementById("search").scrollIntoView({ behavior: "smooth", block: "start" });
+  function locationsGroupedByCity() {
+    return instituteLocations.reduce((groups, item) => {
+      if (!groups[item.city]) groups[item.city] = [];
+      groups[item.city].push(item);
+      return groups;
+    }, {});
   }
 
-  function zoomToCity(city) { currentMapCity = city; hideMapTooltip(); renderMap(); }
-  function resetMapView() { currentMapCity = null; hideMapTooltip(); renderMap(); }
-  function makeSvgElement(name, attributes = {}) { const element = document.createElementNS("http://www.w3.org/2000/svg", name); Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value)); return element; }
-
-  function addMarker(svg, item, options = {}) {
-    const selectedInstitute = document.getElementById("xo-institute")?.value;
-    const group = makeSvgElement("g", { class: `xo-map-marker${selectedInstitute === item.institute ? " is-active" : ""}`, tabindex: "0", role: "button", "aria-label": `Show people affiliated with ${item.institute}` });
-    const cx = options.useLocal ? item.localX : item.x;
-    const cy = options.useLocal ? item.localY : item.y;
-    group.appendChild(makeSvgElement("circle", { cx, cy, r: options.radius || 5.8 }));
-    if (options.labels) { const label = makeSvgElement("text", { x: cx + 8, y: cy + 4, class: "xo-map-marker-label" }); label.textContent = item.institute.replace("Universidad ", "U. ").replace("Pontificia Universidad Católica de Chile", "PUC Chile"); group.appendChild(label); }
-    group.addEventListener("mouseenter", event => showMapTooltip(event, `<strong>${item.institute}</strong><span>${item.city}, Chile · click to show affiliated people</span>`));
-    group.addEventListener("mousemove", event => showMapTooltip(event, `<strong>${item.institute}</strong><span>${item.city}, Chile · click to show affiliated people</span>`));
-    group.addEventListener("mouseleave", hideMapTooltip);
-    group.addEventListener("click", () => selectInstituteFromMap(item.institute));
-    group.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); selectInstituteFromMap(item.institute); } });
-    svg.appendChild(group);
-  }
-
-  function addCluster(svg, city, items) {
-    const avgX = items.reduce((sum, item) => sum + item.x, 0) / items.length;
-    const avgY = items.reduce((sum, item) => sum + item.y, 0) / items.length;
-    const group = makeSvgElement("g", { class: "xo-map-cluster", tabindex: "0", role: "button", "aria-label": `Zoom into ${city}, ${items.length} institutes` });
-    group.appendChild(makeSvgElement("circle", { cx: avgX, cy: avgY, r: 15 }));
-    const text = makeSvgElement("text", { x: avgX, y: avgY }); text.textContent = items.length; group.appendChild(text);
-    const instituteList = items.map(item => item.institute).join("<br>");
-    group.addEventListener("mouseenter", event => showMapTooltip(event, `<strong>${city}</strong><span>${items.length} institutes<br>${instituteList}</span>`));
-    group.addEventListener("mousemove", event => showMapTooltip(event, `<strong>${city}</strong><span>Click to zoom in and resolve institutes.</span>`));
-    group.addEventListener("mouseleave", hideMapTooltip);
-    group.addEventListener("click", () => zoomToCity(city));
-    group.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); zoomToCity(city); } });
-    svg.appendChild(group);
-  }
-
-  function addBaseMap(svg, viewBox, zoomed = false) {
-    svg.setAttribute("viewBox", viewBox); svg.setAttribute("preserveAspectRatio", "none"); svg.innerHTML = "";
-    svg.appendChild(makeSvgElement("path", { d: chilePath, class: "xo-chile-shape" }));
-    [["Antofagasta",157,176],["Central Chile",157,318],["Biobío",157,438]].forEach(([txt,x,y]) => {
-      const label = makeSvgElement("text", { x, y, class: "xo-map-region-label" });
-      label.textContent = zoomed ? "" : txt;
-      svg.appendChild(label);
+  function createInstituteIcon(isActive = false) {
+    return L.divIcon({
+      className: "",
+      html: `<div class="xo-leaflet-marker${isActive ? " is-active" : ""}"></div>`,
+      iconSize: [isActive ? 21 : 17, isActive ? 21 : 17],
+      iconAnchor: [isActive ? 10.5 : 8.5, isActive ? 10.5 : 8.5]
     });
   }
 
-  function renderMap() {
-    const svg = document.getElementById("xo-map-svg"); const backButton = document.getElementById("xo-map-back"); const title = document.getElementById("xo-map-title"); const subtitle = document.getElementById("xo-map-subtitle"); const footer = document.getElementById("xo-map-footer");
-    if (!svg || !backButton || !title || !subtitle || !footer) return;
+  function createClusterIcon(count) {
+    return L.divIcon({ className: "", html: `<div class="xo-leaflet-cluster">${count}</div>`, iconSize: [34, 34], iconAnchor: [17, 17] });
+  }
+
+  function markerPopupHtml(item) {
+    const safeInstitute = item.institute.replace(/'/g, "\\'");
+    return `<strong>${item.institute}</strong><br><span>${item.city}, Chile</span><br><button type="button" onclick="selectInstituteFromMap('${safeInstitute}')">Show affiliated people</button>`;
+  }
+
+  function selectInstituteFromMap(institute) {
+    document.querySelectorAll(".xo-search-panel select").forEach(select => { select.value = ""; });
+    multiCategories.forEach(category => {
+      const stack = document.getElementById(`xo-${category}-stack`);
+      stack.innerHTML = "";
+      addMultiSelector(category);
+    });
+    const instituteSelect = document.getElementById("xo-institute");
+    instituteSelect.value = institute;
+    render();
+    const item = instituteLocations.find(location => location.institute === institute);
+    if (item && xoMap) {
+      xoMapMode = "institute";
+      xoMap.setView([item.lat, item.lon], 14, { animate: true });
+      renderMapMarkers();
+    }
+    document.getElementById("search").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function zoomToCity(city) {
     const grouped = locationsGroupedByCity();
-    if (currentMapCity) {
-      const view = cityViews[currentMapCity] || { viewBox: "160 300 70 90", label: currentMapCity, labelX: 163, labelY: 312 };
-      addBaseMap(svg, view.viewBox, true); backButton.classList.add("is-visible"); backButton.textContent = "← Regional view"; title.textContent = currentMapCity; subtitle.textContent = "Zoomed view: click an institute to immediately show affiliated people below."; footer.textContent = "Use “Regional view” to return to the cropped institute map.";
-      const label = makeSvgElement("text", { x: view.labelX, y: view.labelY, class: "xo-map-region-label" }); label.textContent = view.label; svg.appendChild(label);
-      grouped[currentMapCity].forEach(item => addMarker(svg, item, { useLocal: true, labels: true, radius: 5.2 }));
+    const items = grouped[city] || [];
+    if (!items.length || !xoMap) return;
+    xoMapMode = city;
+    if (items.length === 1) {
+      xoMap.setView([items[0].lat, items[0].lon], 13, { animate: true });
+    } else {
+      const bounds = L.latLngBounds(items.map(item => [item.lat, item.lon]));
+      xoMap.fitBounds(bounds.pad(2.8), { animate: true, maxZoom: 14 });
+    }
+    renderMapMarkers();
+  }
+
+  function resetMapView() {
+    xoMapMode = "regional";
+    if (xoMap) xoMap.fitBounds(regionalBounds, { animate: true, padding: [12, 12] });
+    renderMapMarkers();
+  }
+
+  function initMap() {
+    if (xoMap || typeof L === "undefined") return;
+    xoMap = L.map("xo-osm-map", { zoomControl: true, scrollWheelZoom: false, attributionControl: true });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(xoMap);
+    xoMapLayer = L.layerGroup().addTo(xoMap);
+    xoMap.fitBounds(regionalBounds, { padding: [12, 12] });
+    renderMapMarkers();
+    setTimeout(() => xoMap.invalidateSize(), 150);
+  }
+
+  function renderMapMarkers() {
+    if (!xoMap || !xoMapLayer) return;
+    xoMapLayer.clearLayers();
+    const selectedInstitute = document.getElementById("xo-institute")?.value || "";
+    const grouped = locationsGroupedByCity();
+    const backButton = document.getElementById("xo-map-back");
+    const title = document.getElementById("xo-map-title");
+    const subtitle = document.getElementById("xo-map-subtitle");
+    const footer = document.getElementById("xo-map-footer");
+
+    if (xoMapMode === "regional") {
+      backButton.classList.remove("is-visible");
+      title.textContent = "Institutes in Chile";
+      subtitle.textContent = "OpenStreetMap view cropped to the region with entries. Click a numbered city cluster to resolve institutes.";
+      footer.textContent = "Clusters avoid overplotting cities with several institutes, such as Santiago and Antofagasta.";
+      Object.entries(grouped).forEach(([city, items]) => {
+        if (items.length > 1) {
+          const lat = items.reduce((sum, item) => sum + item.lat, 0) / items.length;
+          const lon = items.reduce((sum, item) => sum + item.lon, 0) / items.length;
+          const instituteList = items.map(item => item.institute).join("<br>");
+          const marker = L.marker([lat, lon], { icon: createClusterIcon(items.length), keyboard: true })
+            .bindPopup(`<strong>${city}</strong><br><span>${items.length} institutes</span><br><span>${instituteList}</span>`)
+            .on("click", () => zoomToCity(city));
+          xoMapLayer.addLayer(marker);
+        } else {
+          const item = items[0];
+          const marker = L.marker([item.lat, item.lon], { icon: createInstituteIcon(selectedInstitute === item.institute), keyboard: true })
+            .bindPopup(markerPopupHtml(item))
+            .on("click", () => selectInstituteFromMap(item.institute));
+          xoMapLayer.addLayer(marker);
+        }
+      });
       return;
     }
-    addBaseMap(svg, "154 165 74 285", false); backButton.classList.remove("is-visible"); title.textContent = "Institutes in the database region"; subtitle.textContent = "The map is tightly cropped to the latitude range with entries. Click a cluster to zoom in; click an institute to show affiliated people."; footer.textContent = "Clusters avoid overplotting cities with several institutes, such as Santiago and Antofagasta.";
-    Object.entries(grouped).forEach(([city, items]) => { if (items.length > 1) addCluster(svg, city, items); else addMarker(svg, items[0], { labels: false }); });
+
+    backButton.classList.add("is-visible");
+    backButton.textContent = "← Regional view";
+    title.textContent = xoMapMode === "institute" ? "Selected institute" : xoMapMode;
+    subtitle.textContent = "Zoomed OpenStreetMap view: click an institute to immediately show affiliated people below.";
+    footer.textContent = "Use “Regional view” to return to the institute-region map.";
+    const items = xoMapMode === "institute" ? instituteLocations : (grouped[xoMapMode] || instituteLocations);
+    items.forEach(item => {
+      const marker = L.marker([item.lat, item.lon], { icon: createInstituteIcon(selectedInstitute === item.institute), keyboard: true })
+        .bindPopup(markerPopupHtml(item))
+        .on("click", () => selectInstituteFromMap(item.institute));
+      xoMapLayer.addLayer(marker);
+    });
   }
+
+  function renderMap() { initMap(); renderMapMarkers(); }
 
   const categories = {
     institute: "Institute",
