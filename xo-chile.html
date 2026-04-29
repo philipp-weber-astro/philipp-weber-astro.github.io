@@ -845,6 +845,78 @@
 
     .xo-chip { padding: 0.12rem 0.58rem; font-size: 0.76rem; }
 
+    .xo-category-grid {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (min-width: 760px) {
+      .xo-category-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .xo-category-card {
+      background: rgba(5, 8, 20, 0.45);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+    }
+
+    .xo-category-card h3 {
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .xo-category-card .xo-help {
+      margin-bottom: 0.75rem;
+    }
+
+    .xo-selector-stack {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .xo-selector-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.45rem;
+      align-items: center;
+    }
+
+    .xo-remove-row {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      background: rgba(5, 8, 20, 0.85);
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 1.1rem;
+      line-height: 1;
+      transition: border-color var(--transition), background var(--transition);
+    }
+
+    .xo-remove-row:hover {
+      border-color: var(--accent);
+      background: rgba(79, 209, 197, 0.08);
+    }
+
+    .xo-add-row {
+      margin-top: 0.65rem;
+      padding: 0.45rem 0.9rem;
+      font-size: 0.82rem;
+    }
+
+    .xo-search-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-top: 1.2rem;
+      align-items: center;
+    }
+
   </style>
 
 </head>
@@ -896,36 +968,74 @@
       </div>
     </section>
 
+
     <section id="search">
       <div class="section-inner">
         <div class="section-header">
           <div class="section-kicker">Search Engine</div>
           <h2 class="section-title">Find collaborators by tags</h2>
           <p class="section-subtitle">
-            Exact matches are listed first. If you select more than two criteria, XO-Chile also lists people matching all but one criterion.
+            Choose only the fields you need. Exact matches are listed first. If you select more than two criteria, XO-Chile also lists people matching all but one criterion.
           </p>
         </div>
 
         <div class="xo-search-panel">
-          <div class="xo-controls">
-            <div class="xo-field">
-              <label for="xo-category">Category</label>
-              <select id="xo-category"></select>
+          <div class="xo-category-grid">
+            <div class="xo-category-card">
+              <h3>Institute</h3>
+              <div class="xo-help">Optional single-choice filter.</div>
+              <div class="xo-field">
+                <label for="xo-institute">Institute</label>
+                <select id="xo-institute" data-category="institute"></select>
+              </div>
             </div>
-            <div class="xo-field">
-              <label for="xo-value">Tag</label>
-              <select id="xo-value"></select>
-              <div class="xo-help">Add one tag at a time. Multi-entry fields such as focus, language, and skills can be combined freely.</div>
+
+            <div class="xo-category-card">
+              <h3>City</h3>
+              <div class="xo-help">Optional single-choice filter.</div>
+              <div class="xo-field">
+                <label for="xo-city">City</label>
+                <select id="xo-city" data-category="city"></select>
+              </div>
             </div>
-            <div class="xo-field">
-              <button id="xo-add" class="btn btn-primary" type="button">Add tag</button>
+
+            <div class="xo-category-card">
+              <h3>Career stage</h3>
+              <div class="xo-help">Optional single-choice filter.</div>
+              <div class="xo-field">
+                <label for="xo-careerStage">Career stage</label>
+                <select id="xo-careerStage" data-category="careerStage"></select>
+              </div>
             </div>
-            <div class="xo-field">
-              <button id="xo-clear" class="btn btn-outline" type="button">Clear search</button>
+
+            <div class="xo-category-card">
+              <h3>Scientific focus</h3>
+              <div class="xo-help">Optional multi-choice filter. Add more than one focus if useful.</div>
+              <div class="xo-selector-stack" id="xo-focus-stack"></div>
+              <button class="btn btn-outline xo-add-row" type="button" data-add-category="focus">+ Add another focus</button>
+            </div>
+
+            <div class="xo-category-card">
+              <h3>Language</h3>
+              <div class="xo-help">Optional multi-choice filter. For example: Spanish + English.</div>
+              <div class="xo-selector-stack" id="xo-languages-stack"></div>
+              <button class="btn btn-outline xo-add-row" type="button" data-add-category="languages">+ Add another language</button>
+            </div>
+
+            <div class="xo-category-card">
+              <h3>Skills / tools</h3>
+              <div class="xo-help">Optional multi-choice filter. For example: RADMC-3D + CASA.</div>
+              <div class="xo-selector-stack" id="xo-skills-stack"></div>
+              <button class="btn btn-outline xo-add-row" type="button" data-add-category="skills">+ Add another skill</button>
             </div>
           </div>
+
+          <div class="xo-search-actions">
+            <button id="xo-clear" class="btn btn-outline" type="button">Clear search</button>
+            <span class="xo-small-note">The current entries are fake placeholders and can later be replaced with real community data.</span>
+          </div>
+
           <div id="xo-selected-tags" class="xo-selected-tags" aria-live="polite"></div>
-          <p class="xo-small-note">The current entries are fake placeholders and can later be replaced with real community data.</p>
         </div>
 
         <div id="xo-results-summary" class="xo-results-summary"></div>
@@ -947,255 +1057,225 @@
 
 </div>
 
-      const people = [
-        {
-          name: "Camila Rojas",
-          institute: "Universidad de Chile",
-          city: "Santiago",
-          careerStage: "PhD student",
-          focus: ["Planet formation", "Protoplanetary discs", "Dust evolution"],
-          languages: ["Spanish", "English"],
-          skills: ["RADMC-3D", "FARGO3D", "ALMA", "Python"]
-        },
-        {
-          name: "Diego Fuentes",
-          institute: "Universidad de Concepción",
-          city: "Concepción",
-          careerStage: "Postdoc",
-          focus: ["Exoplanet atmospheres", "Transmission spectroscopy", "Hot Jupiters"],
-          languages: ["Spanish", "English", "Portuguese"],
-          skills: ["JWST", "petitRADTRANS", "Python", "MCMC"]
-        },
-        {
-          name: "Valentina Morales",
-          institute: "Pontificia Universidad Católica de Chile",
-          city: "Santiago",
-          careerStage: "Assistant professor",
-          focus: ["Direct imaging", "Young planets", "High-contrast imaging"],
-          languages: ["Spanish", "English", "French"],
-          skills: ["VLT/SPHERE", "ERIS", "ADI/PCA", "IRAF"]
-        },
-        {
-          name: "Tomás Araya",
-          institute: "Universidad de Valparaíso",
-          city: "Valparaíso",
-          careerStage: "Master student",
-          focus: ["Planet occurrence", "Radial velocities", "M dwarfs"],
-          languages: ["Spanish", "English"],
-          skills: ["HARPS", "ESPRESSO", "Gaussian processes", "Python"]
-        },
-        {
-          name: "Antonia Vega",
-          institute: "Universidad de Antofagasta",
-          city: "Antofagasta",
-          careerStage: "Research scientist",
-          focus: ["Debris discs", "Exocomets", "Gas in debris discs"],
-          languages: ["Spanish", "English", "German"],
-          skills: ["ALMA", "CASA", "RADMC-3D", "DustPy"]
-        },
-        {
-          name: "Benjamín Salinas",
-          institute: "Universidad Diego Portales",
-          city: "Santiago",
-          careerStage: "Postdoc",
-          focus: ["Transit photometry", "TESS planets", "Machine learning"],
-          languages: ["Spanish", "English"],
-          skills: ["TESS", "Lightkurve", "scikit-learn", "SQL"]
-        },
-        {
-          name: "Lucía Contreras",
-          institute: "Universidad de La Serena",
-          city: "La Serena",
-          careerStage: "PhD student",
-          focus: ["Circumplanetary discs", "Accretion", "Planet formation"],
-          languages: ["Spanish", "English", "Italian"],
-          skills: ["RADMC-3D", "PLUTO", "CASA", "Python"]
-        },
-        {
-          name: "Matías Herrera",
-          institute: "Universidad Católica del Norte",
-          city: "Antofagasta",
-          careerStage: "Assistant professor",
-          focus: ["Microlensing", "Cold exoplanets", "Planet demographics"],
-          languages: ["Spanish", "English"],
-          skills: ["OGLE", "MOA", "Bayesian modelling", "Julia"]
-        },
-        {
-          name: "Isidora Paredes",
-          institute: "Universidad Andrés Bello",
-          city: "Viña del Mar",
-          careerStage: "Master student",
-          focus: ["Planetary interiors", "Sub-Neptunes", "Mass-radius relations"],
-          languages: ["Spanish", "English"],
-          skills: ["ExoPlex", "Python", "MCMC", "Data visualization"]
-        },
-        {
-          name: "Nicolás Sepúlveda",
-          institute: "Universidad de Santiago de Chile",
-          city: "Santiago",
-          careerStage: "Research scientist",
-          focus: ["Planet formation", "Disc-planet interactions", "Hydrodynamics"],
-          languages: ["Spanish", "English", "German"],
-          skills: ["FARGO3D", "RADMC-3D", "ALMA", "CASA"]
-        }
-      ];
-
-      const categories = {
-        institute: "Institute",
-        city: "City",
-        careerStage: "Career stage",
-        focus: "Scientific focus",
-        languages: "Language",
-        skills: "Skills"
-      };
-
-      let selectedCriteria = [];
-
-      const categorySelect = document.getElementById("xo-category");
-      const valueSelect = document.getElementById("xo-value");
-      const addButton = document.getElementById("xo-add");
-      const clearButton = document.getElementById("xo-clear");
-      const selectedTags = document.getElementById("xo-selected-tags");
-      const results = document.getElementById("xo-results");
-      const summary = document.getElementById("xo-results-summary");
-
-      function valuesForCategory(category) {
-        const values = new Set();
-        people.forEach(person => {
-          const entry = person[category];
-          if (Array.isArray(entry)) {
-            entry.forEach(item => values.add(item));
-          } else {
-            values.add(entry);
-          }
-        });
-        return Array.from(values).sort((a, b) => a.localeCompare(b));
-      }
-
-      function populateCategories() {
-        Object.entries(categories).forEach(([key, label]) => {
-          const option = document.createElement("option");
-          option.value = key;
-          option.textContent = label;
-          categorySelect.appendChild(option);
-        });
-      }
-
-      function populateValues() {
-        valueSelect.innerHTML = "";
-        valuesForCategory(categorySelect.value).forEach(value => {
-          const option = document.createElement("option");
-          option.value = value;
-          option.textContent = value;
-          valueSelect.appendChild(option);
-        });
-      }
-
-      function personMatchesCriterion(person, criterion) {
-        const entry = person[criterion.category];
-        if (Array.isArray(entry)) {
-          return entry.includes(criterion.value);
-        }
-        return entry === criterion.value;
-      }
-
-      function matchCount(person) {
-        return selectedCriteria.filter(criterion => personMatchesCriterion(person, criterion)).length;
-      }
-
-      function renderSelectedTags() {
-        selectedTags.innerHTML = "";
-        if (selectedCriteria.length === 0) {
-          selectedTags.innerHTML = '<span class="xo-muted">No tags selected yet.</span>';
-          return;
-        }
-
-        selectedCriteria.forEach((criterion, index) => {
-          const tag = document.createElement("span");
-          tag.className = "xo-tag";
-          tag.innerHTML = `${categories[criterion.category]}: ${criterion.value} <button type="button" aria-label="Remove ${criterion.value}">&times;</button>`;
-          tag.querySelector("button").addEventListener("click", () => {
-            selectedCriteria.splice(index, 1);
-            render();
-          });
-          selectedTags.appendChild(tag);
-        });
-      }
-
-      function chips(items) {
-        return `<div class="xo-chip-list">${items.map(item => `<span class="xo-chip">${item}</span>`).join("")}</div>`;
-      }
-
-      function renderCards(personList, selectedCount) {
-        if (personList.length === 0) {
-          return '<p class="xo-muted">No people in this category.</p>';
-        }
-
-        return `<div class="xo-grid">${personList.map(person => `
-          <article class="xo-card">
-            <h4>${person.name}</h4>
-            <p><strong>${person.careerStage}</strong></p>
-            <p>${person.institute}<br>${person.city}, Chile</p>
-            ${selectedCount !== undefined ? `<p class="xo-muted">Matches ${selectedCount} of ${selectedCriteria.length} selected criteria.</p>` : ""}
-            <p><strong>Scientific focus</strong></p>
-            ${chips(person.focus)}
-            <p><strong>Languages</strong></p>
-            ${chips(person.languages)}
-            <p><strong>Skills</strong></p>
-            ${chips(person.skills)}
-          </article>
-        `).join("")}</div>`;
-      }
-
-      function renderResults() {
-        if (selectedCriteria.length === 0) {
-          summary.textContent = `Showing all ${people.length} fictional XO-Chile entries.`;
-          results.innerHTML = renderCards(people);
-          return;
-        }
-
-        const exactMatches = people.filter(person => matchCount(person) === selectedCriteria.length);
-        const nearMatches = selectedCriteria.length > 2
-          ? people.filter(person => matchCount(person) === selectedCriteria.length - 1)
-          : [];
-
-        summary.textContent = `${exactMatches.length} exact match${exactMatches.length === 1 ? "" : "es"}` +
-          (selectedCriteria.length > 2 ? ` and ${nearMatches.length} near match${nearMatches.length === 1 ? "" : "es"}.` : ".");
-
-        let html = `<h3 class="xo-result-section-title">Exact matches</h3>${renderCards(exactMatches, selectedCriteria.length)}`;
-        if (selectedCriteria.length > 2) {
-          html += `<h3 class="xo-result-section-title">Near matches: all but one criterion</h3>${renderCards(nearMatches, selectedCriteria.length - 1)}`;
-        }
-        results.innerHTML = html;
-      }
-
-      function render() {
-        renderSelectedTags();
-        renderResults();
-      }
-
-      addButton.addEventListener("click", () => {
-        const criterion = { category: categorySelect.value, value: valueSelect.value };
-        const alreadySelected = selectedCriteria.some(existing => existing.category === criterion.category && existing.value === criterion.value);
-        if (!alreadySelected) {
-          selectedCriteria.push(criterion);
-        }
-        render();
-      });
-
-      clearButton.addEventListener("click", () => {
-        selectedCriteria = [];
-        render();
-      });
-
-      categorySelect.addEventListener("change", populateValues);
-
-      populateCategories();
-      populateValues();
-      render();
-    </script>
-
 <script>
+  const people = [
+    { name: "Camila Rojas", institute: "Universidad de Chile", city: "Santiago", careerStage: "PhD student", focus: ["Planet formation", "Protoplanetary discs", "Dust evolution"], languages: ["Spanish", "English"], skills: ["RADMC-3D", "FARGO3D", "ALMA", "Python"] },
+    { name: "Diego Fuentes", institute: "Universidad de Concepción", city: "Concepción", careerStage: "Postdoc", focus: ["Exoplanet atmospheres", "Transmission spectroscopy", "Hot Jupiters"], languages: ["Spanish", "English", "Portuguese"], skills: ["JWST", "petitRADTRANS", "Python", "MCMC"] },
+    { name: "Valentina Morales", institute: "Pontificia Universidad Católica de Chile", city: "Santiago", careerStage: "Assistant professor", focus: ["Direct imaging", "Young planets", "High-contrast imaging"], languages: ["Spanish", "English", "French"], skills: ["VLT/SPHERE", "ERIS", "ADI/PCA", "IRAF"] },
+    { name: "Tomás Araya", institute: "Universidad de Valparaíso", city: "Valparaíso", careerStage: "Master student", focus: ["Planet occurrence", "Radial velocities", "M dwarfs"], languages: ["Spanish", "English"], skills: ["HARPS", "ESPRESSO", "Gaussian processes", "Python"] },
+    { name: "Antonia Vega", institute: "Universidad de Antofagasta", city: "Antofagasta", careerStage: "Research scientist", focus: ["Debris discs", "Exocomets", "Gas in debris discs"], languages: ["Spanish", "English", "German"], skills: ["ALMA", "CASA", "RADMC-3D", "DustPy"] },
+    { name: "Benjamín Salinas", institute: "Universidad Diego Portales", city: "Santiago", careerStage: "Postdoc", focus: ["Transit photometry", "TESS planets", "Machine learning"], languages: ["Spanish", "English"], skills: ["TESS", "Lightkurve", "scikit-learn", "SQL"] },
+    { name: "Lucía Contreras", institute: "Universidad de La Serena", city: "La Serena", careerStage: "PhD student", focus: ["Circumplanetary discs", "Accretion", "Planet formation"], languages: ["Spanish", "English", "Italian"], skills: ["RADMC-3D", "PLUTO", "CASA", "Python"] },
+    { name: "Matías Herrera", institute: "Universidad Católica del Norte", city: "Antofagasta", careerStage: "Assistant professor", focus: ["Microlensing", "Cold exoplanets", "Planet demographics"], languages: ["Spanish", "English"], skills: ["OGLE", "MOA", "Bayesian modelling", "Julia"] },
+    { name: "Isidora Paredes", institute: "Universidad Andrés Bello", city: "Viña del Mar", careerStage: "Master student", focus: ["Planetary interiors", "Sub-Neptunes", "Mass-radius relations"], languages: ["Spanish", "English"], skills: ["ExoPlex", "Python", "MCMC", "Data visualization"] },
+    { name: "Nicolás Sepúlveda", institute: "Universidad de Santiago de Chile", city: "Santiago", careerStage: "Research scientist", focus: ["Planet formation", "Disc-planet interactions", "Hydrodynamics"], languages: ["Spanish", "English", "German"], skills: ["FARGO3D", "RADMC-3D", "ALMA", "CASA"] }
+  ];
+
+  const categories = {
+    institute: "Institute",
+    city: "City",
+    careerStage: "Career stage",
+    focus: "Scientific focus",
+    languages: "Language",
+    skills: "Skills / tools"
+  };
+
+  const singleCategories = ["institute", "city", "careerStage"];
+  const multiCategories = ["focus", "languages", "skills"];
+
+  const selectedTags = document.getElementById("xo-selected-tags");
+  const results = document.getElementById("xo-results");
+  const summary = document.getElementById("xo-results-summary");
+  const clearButton = document.getElementById("xo-clear");
+
+  function valuesForCategory(category) {
+    const values = new Set();
+    people.forEach(person => {
+      const entry = person[category];
+      if (Array.isArray(entry)) entry.forEach(item => values.add(item));
+      else values.add(entry);
+    });
+    return Array.from(values).sort((a, b) => a.localeCompare(b));
+  }
+
+  function addOptionsToSelect(select, category) {
+    select.innerHTML = "";
+    const anyOption = document.createElement("option");
+    anyOption.value = "";
+    anyOption.textContent = `Any ${categories[category].toLowerCase()}`;
+    select.appendChild(anyOption);
+
+    valuesForCategory(category).forEach(value => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      select.appendChild(option);
+    });
+  }
+
+  function populateSingleSelects() {
+    singleCategories.forEach(category => {
+      const select = document.querySelector(`select[data-category="${category}"]`);
+      addOptionsToSelect(select, category);
+      select.addEventListener("change", render);
+    });
+  }
+
+  function addMultiSelector(category, value = "") {
+    const stack = document.getElementById(`xo-${category}-stack`);
+    const row = document.createElement("div");
+    row.className = "xo-selector-row";
+
+    const field = document.createElement("div");
+    field.className = "xo-field";
+
+    const select = document.createElement("select");
+    select.dataset.category = category;
+    addOptionsToSelect(select, category);
+    select.value = value;
+    select.addEventListener("change", render);
+    field.appendChild(select);
+
+    const removeButton = document.createElement("button");
+    removeButton.className = "xo-remove-row";
+    removeButton.type = "button";
+    removeButton.innerHTML = "&times;";
+    removeButton.setAttribute("aria-label", `Remove ${categories[category]} filter`);
+    removeButton.addEventListener("click", () => {
+      row.remove();
+      ensureOneMultiSelector(category);
+      render();
+    });
+
+    row.appendChild(field);
+    row.appendChild(removeButton);
+    stack.appendChild(row);
+  }
+
+  function ensureOneMultiSelector(category) {
+    const stack = document.getElementById(`xo-${category}-stack`);
+    if (stack.children.length === 0) addMultiSelector(category);
+  }
+
+  function getSelectedCriteria() {
+    const criteria = [];
+
+    singleCategories.forEach(category => {
+      const select = document.querySelector(`select[data-category="${category}"]`);
+      if (select && select.value) criteria.push({ category, value: select.value });
+    });
+
+    multiCategories.forEach(category => {
+      const seen = new Set();
+      document.querySelectorAll(`#xo-${category}-stack select`).forEach(select => {
+        if (select.value && !seen.has(select.value)) {
+          criteria.push({ category, value: select.value });
+          seen.add(select.value);
+        }
+      });
+    });
+
+    return criteria;
+  }
+
+  function personMatchesCriterion(person, criterion) {
+    const entry = person[criterion.category];
+    return Array.isArray(entry) ? entry.includes(criterion.value) : entry === criterion.value;
+  }
+
+  function matchCount(person, selectedCriteria) {
+    return selectedCriteria.filter(criterion => personMatchesCriterion(person, criterion)).length;
+  }
+
+  function renderSelectedTags(selectedCriteria) {
+    selectedTags.innerHTML = "";
+    if (selectedCriteria.length === 0) {
+      selectedTags.innerHTML = '<span class="xo-muted">No filters selected. Choose any category above to start narrowing the database.</span>';
+      return;
+    }
+
+    selectedCriteria.forEach(criterion => {
+      const tag = document.createElement("span");
+      tag.className = "xo-tag";
+      tag.textContent = `${categories[criterion.category]}: ${criterion.value}`;
+      selectedTags.appendChild(tag);
+    });
+  }
+
+  function chips(items) {
+    return `<div class="xo-chip-list">${items.map(item => `<span class="xo-chip">${item}</span>`).join("")}</div>`;
+  }
+
+  function renderCards(personList, selectedCount, totalSelected) {
+    if (personList.length === 0) return '<p class="xo-muted">No people in this category.</p>';
+
+    return `<div class="xo-grid">${personList.map(person => `
+      <article class="xo-card">
+        <h4>${person.name}</h4>
+        <p><strong>${person.careerStage}</strong></p>
+        <p>${person.institute}<br>${person.city}, Chile</p>
+        ${selectedCount !== undefined ? `<p class="xo-muted">Matches ${selectedCount} of ${totalSelected} selected criteria.</p>` : ""}
+        <p><strong>Scientific focus</strong></p>
+        ${chips(person.focus)}
+        <p><strong>Languages</strong></p>
+        ${chips(person.languages)}
+        <p><strong>Skills</strong></p>
+        ${chips(person.skills)}
+      </article>
+    `).join("")}</div>`;
+  }
+
+  function renderResults(selectedCriteria) {
+    if (selectedCriteria.length === 0) {
+      summary.textContent = `Showing all ${people.length} fictional XO-Chile entries.`;
+      results.innerHTML = renderCards(people);
+      return;
+    }
+
+    const exactMatches = people.filter(person => matchCount(person, selectedCriteria) === selectedCriteria.length);
+    const nearMatches = selectedCriteria.length > 2
+      ? people.filter(person => matchCount(person, selectedCriteria) === selectedCriteria.length - 1)
+      : [];
+
+    summary.textContent = `${exactMatches.length} exact match${exactMatches.length === 1 ? "" : "es"}` +
+      (selectedCriteria.length > 2 ? ` and ${nearMatches.length} near match${nearMatches.length === 1 ? "" : "es"}.` : ".");
+
+    let html = `<h3 class="xo-result-section-title">Exact matches</h3>${renderCards(exactMatches, selectedCriteria.length, selectedCriteria.length)}`;
+    if (selectedCriteria.length > 2) {
+      html += `<h3 class="xo-result-section-title">Near matches: all but one criterion</h3>${renderCards(nearMatches, selectedCriteria.length - 1, selectedCriteria.length)}`;
+    }
+    results.innerHTML = html;
+  }
+
+  function render() {
+    const selectedCriteria = getSelectedCriteria();
+    renderSelectedTags(selectedCriteria);
+    renderResults(selectedCriteria);
+  }
+
+  document.querySelectorAll("[data-add-category]").forEach(button => {
+    button.addEventListener("click", () => {
+      addMultiSelector(button.dataset.addCategory);
+      render();
+    });
+  });
+
+  clearButton.addEventListener("click", () => {
+    document.querySelectorAll(".xo-search-panel select").forEach(select => { select.value = ""; });
+
+    multiCategories.forEach(category => {
+      const stack = document.getElementById(`xo-${category}-stack`);
+      stack.innerHTML = "";
+      addMultiSelector(category);
+    });
+
+    render();
+  });
+
+  populateSingleSelects();
+  multiCategories.forEach(category => addMultiSelector(category));
+  render();
+
   document.getElementById("year").textContent = new Date().getFullYear();
 </script>
 </body>
