@@ -940,8 +940,8 @@
     .xo-map-header p { color: var(--muted); font-size: 0.68rem; margin: 0; line-height: 1.25; }
     .xo-map-back { display: none; white-space: nowrap; padding: 0.28rem 0.58rem; font-size: 0.68rem; }
     .xo-map-back.is-visible { display: inline-flex; }
-    .xo-map-wrap { position: relative; height: 62px; display: flex; align-items: center; justify-content: center; }
-    .xo-map-svg { width: min(100%, 260px); height: 62px; overflow: visible; }
+    .xo-map-wrap { position: relative; height: 74px; display: flex; align-items: center; justify-content: center; }
+    .xo-map-svg { width: 100%; height: 74px; overflow: visible; }
     .xo-chile-shape { fill: rgba(245, 247, 255, 0.12); stroke: rgba(245, 247, 255, 0.55); stroke-width: 2.1; filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.45)); }
     .xo-map-region-label { fill: rgba(154, 164, 198, 0.72); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
     .xo-map-marker, .xo-map-cluster { cursor: pointer; outline: none; }
@@ -956,7 +956,7 @@
     .xo-map-tooltip.is-visible { opacity: 1; }
     .xo-map-tooltip span { display: block; color: var(--muted); font-size: 0.76rem; margin-top: 0.12rem; }
     .xo-map-footer { color: var(--muted); font-size: 0.66rem; line-height: 1.25; background: rgba(5, 8, 20, 0.55); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 0.45rem 0.6rem; }
-    @media (max-width: 900px) { .xo-map-wrap { height: 70px; } .xo-map-svg { height: 70px; } }
+    @media (max-width: 900px) { .xo-map-wrap { height: 88px; } .xo-map-svg { height: 88px; } }
 
   </style>
 
@@ -1011,7 +1011,7 @@
         </div>
         <div class="xo-map-wrap" id="xo-map-wrap">
           <div id="xo-map-tooltip" class="xo-map-tooltip"></div>
-          <svg id="xo-map-svg" class="xo-map-svg" viewBox="120 140 140 330" role="img" aria-labelledby="xo-map-title xo-map-subtitle"></svg>
+          <svg id="xo-map-svg" class="xo-map-svg" viewBox="154 165 74 285" preserveAspectRatio="none" role="img" aria-labelledby="xo-map-title xo-map-subtitle"></svg>
         </div>
         <div class="xo-map-footer" id="xo-map-footer">Numbered circles indicate cities with multiple institutes in the prototype database. The map is cropped to the region containing entries.</div>
       </div>
@@ -1134,9 +1134,9 @@
   ];
 
   const cityViews = {
-    "Antofagasta": { viewBox: "128 150 112 96", label: "Antofagasta", labelX: 130, labelY: 162 },
-    "Santiago": { viewBox: "150 312 92 92", label: "Santiago", labelX: 154, labelY: 325 },
-    "Valparaíso": { viewBox: "145 300 92 72", label: "Valparaíso / Viña del Mar", labelX: 148, labelY: 313 }
+    "Antofagasta": { viewBox: "158 168 52 48", label: "Antofagasta", labelX: 160, labelY: 176 },
+    "Santiago": { viewBox: "168 330 66 62", label: "Santiago", labelX: 171, labelY: 337 },
+    "Valparaíso": { viewBox: "160 314 58 36", label: "Valparaíso / Viña del Mar", labelX: 162, labelY: 321 }
   };
 
   const chilePath = "M205 36 C189 58 192 83 199 109 C207 138 194 157 181 181 C169 203 170 224 182 248 C194 271 190 293 177 314 C164 336 162 361 178 386 C195 413 197 438 183 466 C169 496 174 522 193 548 C210 573 211 600 198 628 C185 655 193 685 213 706 L236 693 C222 667 222 644 238 614 C252 588 248 558 230 531 C212 503 213 480 229 452 C245 424 241 394 222 366 C204 340 207 319 222 297 C238 273 241 244 224 217 C208 192 211 169 226 144 C240 120 239 91 224 66 C218 55 213 45 205 36 Z";
@@ -1191,9 +1191,9 @@
   }
 
   function addBaseMap(svg, viewBox, zoomed = false) {
-    svg.setAttribute("viewBox", viewBox); svg.innerHTML = "";
+    svg.setAttribute("viewBox", viewBox); svg.setAttribute("preserveAspectRatio", "none"); svg.innerHTML = "";
     svg.appendChild(makeSvgElement("path", { d: chilePath, class: "xo-chile-shape" }));
-    [["Antofagasta",132,165],["Central Chile",132,318],["Biobío",132,448]].forEach(([txt,x,y]) => {
+    [["Antofagasta",157,176],["Central Chile",157,318],["Biobío",157,438]].forEach(([txt,x,y]) => {
       const label = makeSvgElement("text", { x, y, class: "xo-map-region-label" });
       label.textContent = zoomed ? "" : txt;
       svg.appendChild(label);
@@ -1205,13 +1205,13 @@
     if (!svg || !backButton || !title || !subtitle || !footer) return;
     const grouped = locationsGroupedByCity();
     if (currentMapCity) {
-      const view = cityViews[currentMapCity] || { viewBox: "140 300 120 120", label: currentMapCity, labelX: 145, labelY: 312 };
+      const view = cityViews[currentMapCity] || { viewBox: "160 300 70 90", label: currentMapCity, labelX: 163, labelY: 312 };
       addBaseMap(svg, view.viewBox, true); backButton.classList.add("is-visible"); backButton.textContent = "← Regional view"; title.textContent = currentMapCity; subtitle.textContent = "Zoomed view: click an institute to immediately show affiliated people below."; footer.textContent = "Use “Regional view” to return to the cropped institute map.";
       const label = makeSvgElement("text", { x: view.labelX, y: view.labelY, class: "xo-map-region-label" }); label.textContent = view.label; svg.appendChild(label);
       grouped[currentMapCity].forEach(item => addMarker(svg, item, { useLocal: true, labels: true, radius: 5.2 }));
       return;
     }
-    addBaseMap(svg, "120 140 140 330", false); backButton.classList.remove("is-visible"); title.textContent = "Institutes in the database region"; subtitle.textContent = "The map is cropped to cities with entries. Click a cluster to zoom in; click an institute to show affiliated people."; footer.textContent = "Clusters avoid overplotting cities with several institutes, such as Santiago and Antofagasta.";
+    addBaseMap(svg, "154 165 74 285", false); backButton.classList.remove("is-visible"); title.textContent = "Institutes in the database region"; subtitle.textContent = "The map is tightly cropped to the latitude range with entries. Click a cluster to zoom in; click an institute to show affiliated people."; footer.textContent = "Clusters avoid overplotting cities with several institutes, such as Santiago and Antofagasta.";
     Object.entries(grouped).forEach(([city, items]) => { if (items.length > 1) addCluster(svg, city, items); else addMarker(svg, items[0], { labels: false }); });
   }
 
