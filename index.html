@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Philipp Weber – Astrophysicist</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preload" as="image" href="images/theme/exochile_3.jpg" />
   <meta name="description" content="Personal academic website of Your Name – research, science communication, teaching, and CV." />
 
   <!-- Basic styling (inspired by HTML5-style themes, but fully custom) -->
@@ -659,8 +660,347 @@
       color: var(--muted);
     }
   </style>
+
+  <!-- Exoplanets-Chile inspired visual theme -->
+  <style>
+    html { background: #1b1f22; }
+    body {
+      background-color: #1b1f22;
+      background-image:
+        linear-gradient(rgba(19, 21, 25, 0.34), rgba(19, 21, 25, 0.64)),
+        url("images/theme/overlay.png"),
+        url("images/theme/bg.jpg");
+      background-size: auto, auto, cover;
+      background-position: center, center, center;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: "Source Sans Pro", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0.02em;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: radial-gradient(circle at center, transparent 0, rgba(0,0,0,.12) 54%, rgba(0,0,0,.5) 100%);
+      pointer-events: none;
+    }
+    a { color: #fff; border-bottom: dotted 1px rgba(255,255,255,.5); }
+    a:hover { color: #9bf1ff; border-bottom-color: transparent; text-decoration: none; }
+    .page { min-height: 100vh; background: transparent; }
+    header {
+      position: relative;
+      top: auto;
+      z-index: 20;
+      width: min(72rem, calc(100% - 3rem));
+      margin: 2.5rem auto 0;
+      background: rgba(27,31,34,.36);
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 4px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 1.5rem 4rem rgba(0,0,0,.28);
+    }
+    .nav-inner { max-width: none; padding: 0; display: grid; grid-template-columns: auto 1fr; gap: 0; }
+    .logo {
+      display: flex; align-items: center; padding: .85rem 1.25rem;
+      border-right: 1px solid rgba(255,255,255,.35);
+      color: #fff; letter-spacing: .2rem; font-size: .78rem;
+    }
+    nav { display: flex; justify-content: flex-end; }
+    nav ul { gap: 0; width: 100%; justify-content: flex-end; }
+    nav li { border-left: 1px solid rgba(255,255,255,.35); }
+    nav a {
+      display: block; padding: .85rem 1.15rem; color: #fff;
+      text-transform: uppercase; letter-spacing: .16rem; font-size: .72rem;
+      border: 0;
+    }
+    nav a::after { display: none; }
+    nav a:hover { background: rgba(255,255,255,.08); color: #9bf1ff; }
+    .hero {
+      width: min(72rem, calc(100% - 3rem)); max-width: none;
+      margin: 1.25rem auto 0; padding: 3rem;
+      background: rgba(27,31,34,.38);
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 4px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 1.5rem 4rem rgba(0,0,0,.28);
+    }
+    .hero-text h1 { font-size: clamp(2.25rem, 5vw, 4rem); text-transform: uppercase; letter-spacing: .3rem; }
+    .hero-text h1 span { color: #9bf1ff; }
+    .hero-subtitle, .section-kicker { color: #9bf1ff; letter-spacing: .22rem; }
+    .hero-text p, .hero-chip, .profile-tagline, .profile-location, .section-subtitle, .card-meta, .card-body, .timeline-meta, .footer-inner { color: rgba(255,255,255,.78); }
+    .hero-chip { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.28); }
+    .profile-card {
+      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.3);
+      border-radius: 4px; box-shadow: none; backdrop-filter: blur(8px);
+    }
+    .profile-img-wrap { border-radius: 4px; width: min(100%, 260px); height: 260px; border-color: rgba(255,255,255,.35); }
+    .profile-links a { background: transparent; border: 1px solid rgba(255,255,255,.35); color: #fff; border-radius: 4px; }
+    .profile-links a:hover { border-color: #9bf1ff; color: #9bf1ff; background: rgba(155,241,255,.08); }
+    .btn { border-radius: 4px; text-transform: uppercase; letter-spacing: .12rem; font-size: .72rem; }
+    .btn-primary { background: transparent; color: #fff; border-color: rgba(255,255,255,.45); box-shadow: none; }
+    .btn-primary:hover { background: rgba(255,255,255,.1); color: #9bf1ff; border-color: #9bf1ff; box-shadow: none; transform: none; }
+    .btn-outline { background: transparent; border-color: rgba(255,255,255,.35); color: #fff; }
+    section:not(.hero) { background: transparent; padding: 1.25rem 0 0; }
+    .section-inner {
+      width: min(72rem, calc(100% - 3rem)); max-width: none; margin: 0 auto; padding: 3rem;
+      background: rgba(27,31,34,.395); border: 1px solid rgba(255,255,255,.35);
+      border-radius: 4px; backdrop-filter: blur(10px); box-shadow: 0 1.5rem 4rem rgba(0,0,0,.28);
+    }
+    .section-header { margin-bottom: 2rem; }
+    .section-title { text-transform: uppercase; letter-spacing: .18rem; font-size: clamp(1.55rem, 3vw, 2.2rem); }
+    .section-title::after { content: ""; display: block; width: 3.5rem; border-bottom: 1px solid #fff; margin-top: .8rem; }
+    .card, .cv-card {
+      background: rgba(255,255,255,.0275); border: 1px solid rgba(255,255,255,.24);
+      border-radius: 4px; box-shadow: none;
+    }
+    .card:hover { transform: translateY(-3px); border-color: rgba(155,241,255,.7); box-shadow: 0 1rem 2.5rem rgba(0,0,0,.25); }
+    .card-img { border-radius: 3px 3px 0 0; }
+    .card-tag, .timeline-role { color: #9bf1ff; }
+    .card-title, .timeline-inst { color: #fff; }
+    .card-links a { color: #fff; border-bottom: dotted 1px rgba(255,255,255,.5); }
+    .gallery-wrap, .timeline { background: transparent; }
+    .gallery-btn { background: rgba(27,31,34,.4); border-color: rgba(255,255,255,.35); color: #fff; }
+    .timeline-item { background: rgba(255,255,255,.0225); border-color: rgba(255,255,255,.22); }
+    .pill-label { background: rgba(255,255,255,.025); border-color: rgba(255,255,255,.25); color: #fff; }
+    .pill-dot { background: #9bf1ff; }
+    footer { width: min(72rem, calc(100% - 3rem)); margin: 1.25rem auto 2.5rem; background: rgba(27,31,34,.34); border: 1px solid rgba(255,255,255,.25); border-radius: 4px; }
+    .footer-inner { max-width: none; }
+    @media (max-width: 720px) {
+      header { width: calc(100% - 2rem); margin-top: 1rem; }
+      .nav-inner { grid-template-columns: 1fr auto; }
+      .logo { border-right: 0; }
+      .nav-toggle { display: inline-flex; margin: .55rem; border-color: rgba(255,255,255,.35); color: #fff; border-radius: 4px; }
+      nav ul { top: 100%; right: 0; width: min(19rem, calc(100vw - 2rem)); background: rgba(27,31,34,.49); border-color: rgba(255,255,255,.35); border-radius: 4px; }
+      nav li { border-left: 0; border-top: 1px solid rgba(255,255,255,.2); }
+      .hero, .section-inner { width: calc(100% - 2rem); padding: 1.5rem; }
+      footer { width: calc(100% - 2rem); }
+      .hero-text h1 { letter-spacing: .16rem; }
+    }
+  
+
+    /* Exact Exoplanets-Chile background layer */
+    body {
+      background: #1b1f22;
+    }
+    #bg {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      overflow: hidden;
+      pointer-events: none;
+      background: #1b1f22;
+    }
+    #bg::before,
+    #bg::after {
+      content: "";
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    #bg::before {
+      background-image: linear-gradient(to top, rgba(19,21,25,.5), rgba(19,21,25,.5)), url("images/theme/overlay.png");
+      background-size: auto, 256px 256px;
+      background-position: center, center;
+      background-repeat: no-repeat, repeat;
+      z-index: 2;
+    }
+    #bg::after {
+      transform: scale(1.125);
+      background-image: url("images/theme/bg_exoplanet_system.svg");
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      z-index: 1;
+    }
+    body::before { display: none; }
+    .page { position: relative; z-index: 1; }
+
+    /* Animated planetary system, copied from Exoplanets Chile */
+    .planetary-system {
+      width: min(100%, 260px);
+      aspect-ratio: 1;
+      margin: 0 auto 1.25rem;
+      display: grid;
+      place-items: center;
+    }
+    .planetary-system svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      filter: drop-shadow(0 0 18px rgba(155,241,255,.18));
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .planetary-system animateTransform { display: none; }
+    }
+
+
+    /* v4: expose the Exoplanets Chile background and compact the opening */
+    #bg::before {
+      background-image: linear-gradient(to top, rgba(19,21,25,.16), rgba(19,21,25,.16)), url("images/theme/overlay.png");
+    }
+    #bg::after {
+      transform: scale(1.03);
+      background-image: url("images/theme/exochile_3.jpg");
+      background-position: center center;
+      background-size: cover;
+    }
+    header {
+      margin-top: .5rem;
+      background: rgba(27,31,34,.16);
+      backdrop-filter: none;
+    }
+    .hero {
+      margin-top: .5rem;
+      padding: 1.25rem 1.5rem;
+      align-items: start;
+      background: rgba(27,31,34,.14);
+      backdrop-filter: none;
+    }
+    .hero-text h1 { margin-top: 0; }
+    .hero-figure {
+      position: relative;
+      padding-top: 0;
+    }
+    .planetary-system {
+      position: absolute;
+      width: 125px;
+      height: 125px;
+      right: -18px;
+      top: -16px;
+      margin: 0;
+      z-index: 3;
+      opacity: .9;
+      pointer-events: none;
+    }
+    .profile-card {
+      position: relative;
+      z-index: 1;
+      background: rgba(27,31,34,.12);
+      backdrop-filter: none;
+    }
+    .section-inner {
+      background: rgba(27,31,34,.14);
+      backdrop-filter: none;
+    }
+    .card, .cv-card, .timeline-item {
+      background: rgba(27,31,34,.10);
+    }
+    footer { background: rgba(27,31,34,.12); }
+    @media (max-width: 900px) {
+      .hero { padding-top: 1rem; gap: 1.25rem; }
+      .planetary-system { width: 105px; height: 105px; right: -8px; top: -10px; }
+    }
+    @media (max-width: 720px) {
+      header { margin-top: .35rem; }
+      .hero { margin-top: .35rem; padding: 1rem; }
+    }
+
+    /* v5: true transparency and background-first page reveal */
+    html,
+    body {
+      background: transparent !important;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+    }
+
+    #bg {
+      z-index: 0;
+      background: #1b1f22;
+    }
+
+    #bg::before {
+      /* Keep only a very light texture/vignette over the photograph. */
+      background-image:
+        linear-gradient(to top, rgba(19,21,25,.06), rgba(19,21,25,.06)),
+        url("images/theme/overlay.png");
+    }
+
+    #bg::after {
+      transform: scale(1.015);
+      background-image: url("images/theme/exochile_3.jpg");
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      background: transparent !important;
+      opacity: 0;
+      animation: page-dissolve-in 1.35s ease 0.65s forwards;
+    }
+
+    @keyframes page-dissolve-in {
+      from {
+        opacity: 0;
+        filter: blur(3px);
+      }
+      to {
+        opacity: 1;
+        filter: blur(0);
+      }
+    }
+
+    /* The panels are deliberately almost clear, so the photograph remains visible. */
+    header,
+    .hero,
+    .section-inner,
+    .profile-card,
+    .card,
+    .cv-card,
+    .timeline-item,
+    footer,
+    nav ul {
+      background-color: rgba(15, 18, 24, .50) !important;
+      background-image: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+    }
+
+    header,
+    .hero,
+    .section-inner,
+    footer {
+      border-color: rgba(255,255,255,.26) !important;
+    }
+
+    .hero-chip,
+    .profile-links a,
+    .btn,
+    .pill-label,
+    .gallery-btn {
+      background-color: rgba(15,18,24,.10) !important;
+    }
+
+    /* Keep copy legible without covering the background. */
+    .page h1,
+    .page h2,
+    .page h3,
+    .page p,
+    .page li,
+    .page a,
+    .page div {
+      text-shadow: 0 1px 4px rgba(0,0,0,.68);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .page {
+        opacity: 1;
+        animation: none;
+        filter: none;
+      }
+    }
+
+</style>
+
 </head>
 <body>
+<div id="bg" aria-hidden="true"></div>
 <div class="page">
 
   <!-- Header / Nav -->
@@ -704,6 +1044,46 @@
     </div>
 
     <div class="hero-figure">
+      <div class="planetary-system" aria-label="Animated planetary system">
+        <svg viewBox="-85 -85 270 270" role="img" focusable="false">
+          <defs>
+            <radialGradient id="starGlow" cx="38%" cy="32%" r="70%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="28%" stop-color="#fff6b8"/>
+              <stop offset="62%" stop-color="#ffd15c"/>
+              <stop offset="100%" stop-color="#ff8a3d"/>
+            </radialGradient>
+            <radialGradient id="planetBlue" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="45%" stop-color="#7ee7ff"/>
+              <stop offset="100%" stop-color="#3156d4"/>
+            </radialGradient>
+            <radialGradient id="planetTeal" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="50%" stop-color="#4fd1c5"/>
+              <stop offset="100%" stop-color="#0f6b73"/>
+            </radialGradient>
+            <radialGradient id="planetRose" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="48%" stop-color="#ffb0d4"/>
+              <stop offset="100%" stop-color="#b24a82"/>
+            </radialGradient>
+          </defs>
+          <circle cx="50" cy="50" r="25" fill="url(#starGlow)"/>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="5.9s" repeatCount="indefinite"/>
+            <circle cx="150" cy="50" r="9.2" fill="url(#planetBlue)"/>
+          </g>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" from="110 50 50" to="470 50 50" dur="10.8s" repeatCount="indefinite"/>
+            <circle cx="220" cy="50" r="10.2" fill="url(#planetTeal)"/>
+          </g>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" from="235 50 50" to="595 50 50" dur="16.7s" repeatCount="indefinite"/>
+            <circle cx="290" cy="50" r="12" fill="url(#planetRose)"/>
+          </g>
+        </svg>
+      </div>
       <div class="profile-card">
         <div class="profile-img-wrap">
           <!-- Replace with your own portrait -->
@@ -1069,7 +1449,7 @@
 but one criterion are listed afterwards.
         </p>
         <div class="card-links">
-          <a class="btn btn-primary" href="xo-chile.html">Open XO-Chile</a>
+          <a class="btn btn-primary" href="https://exoplanets.cl" target="_blank" rel="noopener">Open XO-Chile</a>
         </div>
       </article>
     </div>
