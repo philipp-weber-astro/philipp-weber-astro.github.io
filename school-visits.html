@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Astronomy in Public Schools – Philipp Weber</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Astronomy classes in public schools across Chile – rural and under-resourced communities from Los Lagos to Santiago – and in Germany." />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-alt: #141a2a;
+      --accent: #4fd1c5;
+      --accent-soft: rgba(79, 209, 197, 0.15);
+      --text: #f5f7ff;
+      --muted: #9aa4c6;
+      --card-bg: #1a2135;
+      --border-subtle: #232b44;
+      --shadow-soft: 0 18px 35px rgba(0, 0, 0, 0.6);
+      --radius-lg: 18px;
+      --radius-pill: 999px;
+      --transition: 0.25s ease;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      background: radial-gradient(circle at top, #1f2845 0, #050814 55%, #02030a 100%);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      scroll-behavior: smooth;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .page { display: flex; min-height: 100vh; flex-direction: column; }
+    header {
+      position: sticky; top: 0; z-index: 20;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(to bottom, rgba(5, 8, 20, 0.96), rgba(5, 8, 20, 0.6));
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-inner {
+      max-width: 1120px; margin: 0 auto; padding: 0.8rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+    }
+    .logo {
+      font-weight: 700; letter-spacing: 0.08em; font-size: 0.95rem;
+      text-transform: uppercase; color: var(--muted);
+    }
+    nav ul { list-style: none; display: flex; gap: 1.25rem; font-size: 0.9rem; }
+    nav a { position: relative; padding: 0.25rem 0; color: var(--muted); font-weight: 500; }
+    nav a::after {
+      content: ""; position: absolute; left: 0; bottom: 0; width: 0; height: 2px;
+      background: var(--accent); transition: width var(--transition);
+    }
+    nav a:hover { color: var(--text); }
+    nav a:hover::after { width: 100%; }
+    .nav-toggle {
+      display: none; background: none; border: 1px solid var(--border-subtle); color: var(--muted);
+      padding: 0.4rem 0.7rem; border-radius: var(--radius-pill); font-size: 0.8rem; cursor: pointer;
+    }
+    @media (max-width: 720px) {
+      nav ul {
+        display: none; position: absolute; top: 54px; right: 1.5rem; flex-direction: column;
+        background: #050814; padding: 0.75rem 1rem; border-radius: 14px;
+        border: 1px solid var(--border-subtle); box-shadow: var(--shadow-soft);
+      }
+      nav ul.open { display: flex; }
+      .nav-toggle { display: inline-flex; align-items: center; gap: 0.25rem; }
+    }
+    main { flex: 1; }
+    .hero {
+      max-width: 1120px; margin: 0 auto; padding: 3rem 1.5rem 2rem;
+      display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 2.5rem; align-items: center;
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: 1fr; padding-top: 2rem; } }
+    .hero-text h1 { font-size: 2.9rem; line-height: 1.05; margin-bottom: 0.8rem; }
+    .hero-text h1 span { color: var(--accent); }
+    .hero-subtitle {
+      text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.18em; color: var(--muted); margin-bottom: 0.8rem;
+    }
+    .hero-text p { color: var(--muted); max-width: 40rem; margin-bottom: 1.2rem; font-size: 1rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; padding: 0.65rem 1.4rem;
+      font-size: 0.9rem; font-weight: 600; border-radius: var(--radius-pill);
+      border: 1px solid transparent; cursor: pointer; text-decoration: none;
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition), border-color var(--transition), color var(--transition);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #63e6be); color: #050814;
+      box-shadow: 0 14px 30px rgba(79, 209, 197, 0.45);
+    }
+    .btn-outline { border-color: var(--border-subtle); background: rgba(5, 8, 20, 0.8); color: var(--muted); }
+    .hero-image img {
+      width: 100%; border-radius: 28px; display: block; box-shadow: var(--shadow-soft);
+      max-height: 520px; object-fit: cover; object-position: center;
+    }
+    section { padding: 1rem 1.5rem 2.5rem; }
+    .section-inner { max-width: 1120px; margin: 0 auto; }
+    .section-header { margin-bottom: 1.4rem; }
+    .section-kicker { font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+    .section-title { font-size: 1.8rem; margin-bottom: 0.4rem; }
+    .section-subtitle { color: var(--muted); width: 100%; font-size: 0.98rem; }
+    .grid { display: grid; gap: 1.5rem; }
+    @media (min-width: 760px) { .grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    .card {
+      background: var(--card-bg); border-radius: var(--radius-lg); padding: 1.2rem;
+      border: 1px solid var(--border-subtle); box-shadow: 0 12px 28px rgba(0,0,0,0.45);
+    }
+    .card p, .card li { color: var(--muted); }
+    .card h3 { margin-bottom: 0.6rem; font-size: 1.05rem; }
+    .card ul { padding-left: 1.2rem; }
+    .split {
+      display: grid; gap: 1.5rem; align-items: center;
+    }
+    @media (min-width: 900px) { .split { grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); } }
+    .feature-image img {
+      width: 100%; border-radius: 22px; display: block; box-shadow: var(--shadow-soft);
+      max-height: 440px; object-fit: cover;
+    }
+    .event-list p { margin-bottom: 0.9rem; color: var(--muted); }
+    .event-group { margin-bottom: 1.4rem; }
+    .event-group:last-child { margin-bottom: 0; }
+    .event-group h3 { color: var(--text); }
+    .stat-row { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+    .stat {
+      flex: 1 1 160px; background: var(--card-bg); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg); padding: 1rem 1.2rem;
+    }
+    .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--accent); line-height: 1.1; }
+    .stat-label { font-size: 0.85rem; color: var(--muted); }
+    .gallery-grid {
+      display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    }
+    .gallery-grid img {
+      width: 100%; height: 190px; object-fit: cover; border-radius: 14px; display: block;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+    .gallery-grid figure { margin: 0; }
+    .gallery-grid figcaption { font-size: 0.8rem; color: var(--muted); margin-top: 0.5rem; }
+    .logos { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+    .logos img {
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle);
+      border-radius: 14px; padding: 0.75rem; max-height: 120px; max-width: 100%;
+    }
+    footer {
+      border-top: 1px solid var(--border-subtle); padding: 1.4rem 1.5rem 1.8rem;
+      font-size: 0.8rem; color: var(--muted); background: #050814;
+    }
+    .footer-inner {
+      max-width: 1120px; margin: 0 auto; display: flex; flex-wrap: wrap;
+      justify-content: space-between; gap: 0.8rem; align-items: center;
+    }
+    .footer-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
+    .muted { color: var(--muted); }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="nav-inner">
+      <div class="logo">PHILIPP WEBER</div>
+      <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('nav ul').classList.toggle('open')">Menu ▾</button>
+      <nav>
+        <ul>
+          <li><a href="index.html#research">Research</a></li>
+          <li><a href="index.html#science-communication">Science Communication</a></li>
+          <li><a href="index.html#cv">CV</a></li>
+          <li><a href="#top">School Visits</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="hero-text">
+        <div class="hero-subtitle">Schools · Astronomy Week · Chile &amp; Germany</div>
+        <h1><span>Astronomy in Public Schools</span></h1>
+        <p>Classroom visits from the lakes of the south to the outskirts of Santiago.</p>
+        <p>
+          Most Marches, for Chile's <i>Semana de la Astronomía</i>, I take planet formation out of the
+          institute and into public classrooms — mostly rural schools and schools in under-resourced
+          communities, where a visit from a working astronomer is a rare thing. Other visits happen
+          whenever a school asks.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#about">What the classes are like</a>
+          <a class="btn btn-outline" href="index.html#science-communication">Back to main site</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="images/colegios/colegio_filadelfia.jpeg" alt="Students of Colegio Particular Filadelfia Tabancura after an astronomy class" />
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="section-inner split">
+        <div>
+          <div class="section-header">
+            <div class="section-kicker">About the visits</div>
+            <h2 class="section-title">Bringing astronomy to the classroom</h2>
+          </div>
+          <div class="card">
+            <p>
+              The classes run 45 to 90 minutes and are built around a single question: how do you
+              build a planet out of dust? We start from what students can see for themselves — the
+              night sky over their own town — and work outwards to protoplanetary disks, the
+              telescopes in the Chilean desert that image them, and the simulations that try to
+              explain what those images show.
+            </p>
+            <p>
+              I deliberately target schools far from the university circuit: <i>escuelas rurales</i>
+              in Los Lagos, Los Ríos, La Araucanía and O'Higgins, and public schools in Santiago
+              communes such as Peñalolén, Pudahuel and Independencia. Chile hosts the world's largest
+              observatories, but for many students that astronomy has never had a deeper meaning. Part of the
+              point of the visit is that it does now.
+            </p>
+            <p>
+              The classes are taught in Spanish, with the exception of a primary-school class given in
+              German at the <i>Theodor-Heuss-Grundschule</i> in Oftersheim.
+            </p>
+          </div>
+        </div>
+        <div class="feature-image">
+          <img src="images/colegios/colegio_paraguay.jpeg" alt="Astronomy class at Escuela Rural Paraguay, Frutillar" />
+        </div>
+      </div>
+    </section>
+
+    <section id="visits">
+      <div class="section-inner">
+        <div class="section-header">
+          <div class="section-kicker">Archive</div>
+          <h2 class="section-title">Schools visited</h2>
+          <p class="section-subtitle">Classes given in public and rural schools across Chile — most of them for Astronomy Week — and in Germany.</p>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat">
+            <div class="stat-value">12</div>
+            <div class="stat-label">classes given</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">550+</div>
+            <div class="stat-label">students reached</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">6</div>
+            <div class="stat-label">regions of Chile</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">2</div>
+            <div class="stat-label">countries</div>
+          </div>
+        </div>
+
+        <div class="card event-list">
+          <div class="event-group">
+            <h3>2026 — Astronomy Week, 90-minute classes</h3>
+            <p><strong>6 March 2026:</strong> <i>Escuela Rural Paraguay</i>, Frutillar, Región de Los Lagos.</p>
+            <p><strong>10 March 2026, 10:00 hrs:</strong> <i>Colegio Teniente Merino</i>, Valdivia, Región de Los Ríos.</p>
+            <p><strong>10 March 2026, 15:45 hrs:</strong> <i>Liceo Santa María de la Blanca</i>, Valdivia, Región de Los Ríos.</p>
+            <p><strong>11 March 2026, 11:00 hrs:</strong> <i>Colegio Particular Filadelfia Tabancura</i>, Afunalhue, Villarrica, Región de La Araucanía.</p>
+            <p><strong>11 March 2026, 14:00 hrs:</strong> <i>Escuela Rural Bocatoma Llongahue</i>, Panguipulli, Región de Los Ríos.</p>
+            <p><strong>23 March 2026:</strong> <i>Liceo Bicentenario Valle Hermoso</i>, Peñalolén, Santiago. Astronomy Day talk for grades 5 and 6, two classes per level, ~100 students.</p>
+            <p><strong>26 March 2026:</strong> <i>Colegio Presidente Alessandri</i>, Independencia, Santiago.</p>
+          </div>
+          <div class="event-group">
+            <h3>2025 — Germany</h3>
+            <p><strong>29 July 2025:</strong> <i>Theodor-Heuss-Grundschule</i>, Oftersheim, Germany. 120-minute class.</p>
+          </div>
+          <div class="event-group">
+            <h3>2023 — 45-minute classes</h3>
+            <p><strong>27 February 2023:</strong> <i>Colegio Bicentenario Madre Ana Eugenia</i>, Pudahuel, Santiago.</p>
+            <p><strong>24 March 2023:</strong> <i>Colegio Francisco Arriarán</i> (SIP), Santiago.</p>
+            <p><strong>30 March 2023:</strong> Public school in San Antonio, Región de Valparaíso.</p>
+          </div>
+          <div class="event-group">
+            <h3>2022</h3>
+            <p><strong>13 December 2022:</strong> <i>Colegio Humboldt</i>, Pupuya, Región de O'Higgins.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery">
+      <div class="section-inner">
+        <div class="section-header">
+          <div class="section-kicker">Gallery</div>
+          <h2 class="section-title">In the classroom</h2>
+        </div>
+        <div class="gallery-grid">
+          <figure>
+            <img src="images/colegios/colegio_paraguay.jpeg" alt="Astronomy class at Escuela Rural Paraguay, Frutillar" />
+            <figcaption><i>Escuela Rural Paraguay</i>, Frutillar.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/colegios/colegio_valdivia1.jpeg" alt="Students of Colegio Teniente Merino, Valdivia, after an astronomy class" />
+            <figcaption><i>Colegio Teniente Merino</i>, Valdivia.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/colegios/colegio_filadelfia.jpeg" alt="Students of Colegio Particular Filadelfia Tabancura gathered after the class" />
+            <figcaption><i>Colegio Particular Filadelfia Tabancura</i>, Afunalhue.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/colegios/colegio_filadelfia2.jpeg" alt="Astronomy class in progress at Colegio Particular Filadelfia Tabancura" />
+            <figcaption><i>Colegio Particular Filadelfia Tabancura</i>, Afunalhue.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/colegios/colegio_filadelfia3.jpeg" alt="Students watching the astronomy presentation at Colegio Particular Filadelfia Tabancura" />
+            <figcaption><i>Colegio Particular Filadelfia Tabancura</i>, Afunalhue.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/colegios/colegio_penalolen.jpg" alt="Astronomy Day talk at Liceo Bicentenario Valle Hermoso, Peñalolén" />
+            <figcaption><i>Liceo Bicentenario Valle Hermoso</i>, Peñalolén.</figcaption>
+          </figure>
+          <figure>
+            <img src="images/colegios/Colegio_Independencia.jpeg" alt="Astronomy class in the assembly hall of Colegio Presidente Alessandri, Independencia" />
+            <figcaption><i>Colegio Presidente Alessandri</i>, Independencia.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="acknowledgements">
+      <div class="section-inner">
+        <div class="section-header">
+          <div class="section-kicker">Acknowledgements</div>
+          <h2 class="section-title">Support and thanks</h2>
+        </div>
+        <div class="grid cols-2">
+          <div class="card">
+            <p>
+              These visits depend entirely on the teachers, science coordinators (in particular Gabriel Ruete Núñez) and school staff who
+              open their classrooms, rearrange their timetables and get several dozen students into a
+              room with a projector. My thanks to all of them.
+            </p>
+            <p>
+              My outreach work is carried out as part of the Millennium Nucleus
+              <i>Young Exoplanets and their Moons (YEMS)</i>, funded by the
+              <strong>ANID—Millennium Science Initiative</strong>, centre code NCN2021_080.
+            </p>
+          </div>
+          <div class="card">
+            <div class="logos">
+              <img src="images/yems_logo.png" alt="YEMS logo" />
+              <img src="images/milenio_logo.webp" alt="Millennium Science Initiative logo" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>
