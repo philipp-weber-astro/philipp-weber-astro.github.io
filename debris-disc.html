@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FARGO3D Lagrangian Dust Module – Philipp Weber</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="A Lagrangian dust-particle module for the FARGO3D hydrodynamics code, with a debris-disc setup as its flagship application: implementation, validation record, and scientific scope." />
+  <link rel="preload" as="image" href="images/theme/exochile_3.jpg" />
+  <style>
+    :root {
+      --accent:#9bf1ff; --text:#fff; --muted:rgba(255,255,255,.74);
+      --line:rgba(255,255,255,.28); --panel:rgba(15,18,24,.7);
+      --panel-strong:rgba(15,18,24,.16); --ok:#b8f5d1; --work:#ffe4a3; --plan:rgba(255,255,255,.62);
+      --font:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;background:transparent}
+    body{font-family:var(--font);color:var(--text);line-height:1.65;background:transparent;position:relative;isolation:isolate;min-height:100vh}
+    #bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#1b1f22}
+    #bg::before,#bg::after{content:"";position:absolute;inset:0;display:block}
+    #bg::after{background:url("images/theme/exochile_3.jpg") center/cover no-repeat;transform:scale(1.015);z-index:1}
+    #bg::before{background-image:linear-gradient(rgba(19,21,25,.20),rgba(19,21,25,.20)),url("images/theme/overlay.png");background-size:auto,256px 256px;background-repeat:no-repeat,repeat;z-index:2}
+    .page{position:relative;z-index:1;opacity:0;animation:reveal 1.35s ease .65s forwards}
+    @keyframes reveal{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:blur(0)}}
+    a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+    header{position:sticky;top:.5rem;z-index:10;width:min(72rem,calc(100% - 3rem));margin:.5rem auto 0;border:1px solid var(--line);border-radius:4px;background:var(--panel)}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.72rem 1.1rem}
+    .brand{font-size:.83rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700}
+    .nav-links{display:flex;gap:1rem;flex-wrap:wrap;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em}
+    main{width:min(72rem,calc(100% - 3rem));margin:.55rem auto 2rem}
+    .panel{border:1px solid var(--line);border-radius:4px;background:var(--panel);padding:clamp(1.2rem,3vw,2.35rem);margin-bottom:.65rem}
+    .eyebrow{text-transform:uppercase;letter-spacing:.17em;font-size:.76rem;color:var(--accent);margin-bottom:.55rem}
+    h1{font-size:clamp(2rem,5vw,4rem);line-height:1.06;letter-spacing:.035em;max-width:15ch}
+    h2{font-size:clamp(1.35rem,3vw,2rem);line-height:1.2;margin-bottom:.75rem}
+    h3{font-size:1rem;margin-bottom:.3rem}
+    p,li{color:var(--muted)}
+    .lead{max-width:58rem;font-size:1.04rem;margin-top:1.1rem}
+    .hero-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:1.5rem;align-items:end}
+    .status-box{border-left:2px solid var(--accent);padding:.7rem 0 .7rem 1rem;background:linear-gradient(90deg,rgba(155,241,255,.08),transparent)}
+    .status-box strong{display:block;color:#fff;margin-bottom:.3rem}
+    .checklist{width:100%;border-collapse:collapse;margin-top:.6rem;font-size:.82rem}
+    .checklist th{font-size:.62rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600;padding:0 0 .3rem;text-align:center;white-space:nowrap}
+    .checklist th:first-child{text-align:left}
+    .checklist td{padding:.32rem 0;border-top:1px solid rgba(255,255,255,.13);color:var(--muted);vertical-align:middle}
+    .checklist td.mark{text-align:center;width:4.4rem;font-size:.98rem;line-height:1}
+    .mark .yes{color:var(--ok)} .mark .part{color:var(--work)} .mark .no{color:rgba(255,255,255,.32)}
+    .checklist-legend{font-size:.7rem;color:var(--muted);margin-top:.6rem;line-height:1.5}
+    .checklist-legend .yes{color:var(--ok)} .checklist-legend .part{color:var(--work)} .checklist-legend .no{color:rgba(255,255,255,.32)}
+    .actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1.3rem}
+    .btn{display:inline-flex;padding:.58rem 1rem;border:1px solid var(--line);border-radius:3px;color:#fff;text-transform:uppercase;letter-spacing:.08em;font-size:.76rem;background:rgba(15,18,24,.10)}
+    .btn.primary{border-color:var(--accent);color:var(--accent)}
+    .btn.disabled{color:rgba(255,255,255,.5);cursor:default}
+    .grid{display:grid;gap:.7rem}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .card{border:1px solid rgba(255,255,255,.22);background:rgba(15,18,24,.08);padding:1rem;border-radius:4px}
+    .tag{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line);padding:.18rem .45rem;margin-bottom:.65rem}
+    .tag.complete{color:var(--ok)} .tag.progress{color:var(--work)} .tag.planned{color:var(--plan)}
+    .card ul{padding-left:1.15rem;margin-top:.45rem}
+    .architecture{display:grid;grid-template-columns:repeat(5,1fr);gap:.45rem;align-items:stretch;margin-top:1rem}
+    .node{border:1px solid var(--line);padding:.8rem .55rem;text-align:center;background:rgba(15,18,24,.10);font-size:.82rem;display:grid;place-items:center;min-height:5.2rem}
+    .arrow{display:none}
+    .test-table{width:100%;border-collapse:collapse;margin-top:.8rem;font-size:.9rem}
+    .test-table th,.test-table td{text-align:left;vertical-align:top;padding:.75rem;border-bottom:1px solid rgba(255,255,255,.18)}
+    .test-table th{color:#fff;font-size:.74rem;text-transform:uppercase;letter-spacing:.08em}
+    .test-table td{color:var(--muted)}
+    .test-table td.metric{color:#fff}
+    .legend{display:flex;flex-wrap:wrap;gap:1.1rem;margin-top:.9rem;font-size:.8rem;color:var(--muted)}
+    .legend span.tag{margin-bottom:0;margin-right:.35rem}
+    .result-slot{border:1px dashed rgba(255,255,255,.35);min-height:10rem;display:grid;place-items:center;text-align:center;padding:1rem;background:rgba(15,18,24,.06);color:rgba(255,255,255,.58);margin-top:.8rem}
+    .slot-row{display:grid;gap:.7rem;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:.8rem}
+    .slot-row .result-slot{margin-top:0}
+    .note{font-size:.85rem;border-left:2px solid var(--work);padding-left:.85rem;margin-top:.8rem}
+    footer{width:min(72rem,calc(100% - 3rem));margin:0 auto 2rem;border:1px solid var(--line);background:var(--panel);padding:1rem 1.2rem;font-size:.82rem;color:var(--muted)}
+    h1,h2,h3,p,li,a,td,th,.brand,.tag{text-shadow:0 1px 4px rgba(0,0,0,.72)}
+    @media(max-width:800px){.hero-grid,.grid-2,.grid-3,.slot-row{grid-template-columns:1fr}.architecture{grid-template-columns:1fr}.nav{align-items:flex-start;flex-direction:column}.test-table{display:block;overflow-x:auto}header,main,footer{width:calc(100% - 2rem)}}
+    @media(prefers-reduced-motion:reduce){.page{opacity:1;animation:none;filter:none}}
+  </style>
+</head>
+<body>
+<div id="bg" aria-hidden="true"></div>
+<div class="page">
+<header>
+  <div class="nav">
+    <a class="brand" href="index.html">Philipp Weber</a>
+    <nav class="nav-links" aria-label="Page sections">
+      <a href="#implementation">Implementation</a><a href="#validation">Validation</a><a href="#debris">Debris discs</a><a href="#applications">Applications</a><a href="index.html">Main site</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <section class="panel hero-grid">
+    <div>
+      <div class="eyebrow">Numerical tool · FARGO3D</div>
+      <h1>Lagrangian Dust Module</h1>
+      <p class="lead">A Lagrangian super-particle module for the FARGO3D hydrodynamics code, built to follow solid material — from micron-sized grains to metre-sized bodies — through gas drag, stellar radiation pressure, planetary resonances and a collisional cascade. Its flagship application is a <strong>debris-disc setup</strong> in which dust is produced by a stirred parent belt, sorted by radiation pressure, and sculpted by a migrating planet in the presence of a residual gas reservoir.</p>
+      <div class="actions"><a class="btn primary" href="#validation">Validation record</a><a class="btn" href="#implementation">Implementation</a><a class="btn" href="#debris">Debris-disc setup</a></div>
+    </div>
+    <aside class="status-box">
+      <strong>Development status</strong>
+      <p>A component is ready for production once both columns are ticked.</p>
+      <table class="checklist">
+        <thead>
+          <tr><th scope="col">Component</th><th scope="col">Implemented</th><th scope="col">Benchmarked</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Particle dynamics and gravity</td>
+            <td class="mark"><span class="yes" role="img" aria-label="implemented">✓</span></td>
+            <td class="mark"><span class="yes" role="img" aria-label="benchmarked">✓</span></td>
+          </tr>
+          <tr>
+            <td>Gas drag and back-reaction</td>
+            <td class="mark"><span class="yes" role="img" aria-label="implemented">✓</span></td>
+            <td class="mark"><span class="yes" role="img" aria-label="benchmarked">✓</span></td>
+          </tr>
+          <tr>
+            <td>Radiation pressure</td>
+            <td class="mark"><span class="yes" role="img" aria-label="implemented">✓</span></td>
+            <td class="mark"><span class="yes" role="img" aria-label="benchmarked">✓</span></td>
+          </tr>
+          <tr>
+            <td>GPU and MPI execution</td>
+            <td class="mark"><span class="yes" role="img" aria-label="implemented">✓</span></td>
+            <td class="mark"><span class="yes" role="img" aria-label="benchmarked">✓</span></td>
+          </tr>
+          <tr>
+            <td>Collisional evolution</td>
+            <td class="mark"><span class="part" role="img" aria-label="implementation in progress">◐</span></td>
+            <td class="mark"><span class="no" role="img" aria-label="not started">☐</span></td>
+          </tr>
+          <tr>
+            <td>Dust production from planetesimal belt</td>
+            <td class="mark"><span class="part" role="img" aria-label="implementation in progress">◐</span></td>
+            <td class="mark"><span class="no" role="img" aria-label="not started">☐</span></td>
+          </tr>
+          <tr>
+            <td>Radiative transfer postprocessing</td>
+            <td class="mark"><span class="part" role="img" aria-label="implementation in progress">◐</span></td>
+            <td class="mark"><span class="no" role="img" aria-label="not started">☐</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="checklist-legend"><span class="yes">✓</span> complete · <span class="part">◐</span> in progress · <span class="no">☐</span> not started. See the <a href="#validation">validation programme</a> for the underlying tests.</p>
+    </aside>
+  </section>
+
+  <section class="panel">
+    <div class="eyebrow">Scientific motivation</div>
+    <h2>Why a dedicated dust module?</h2>
+    <div class="grid grid-2">
+      <div>
+        <p>Debris discs are dynamically evolved, collisionally active systems in which the dust we observe is continuously replenished from a reservoir of larger parent bodies. Their resolved structure — rings, gaps, clumps, eccentric offsets and extended haloes — is set by the interplay of planetary perturbations, radiation pressure, collisional fragmentation, and, increasingly often, a residual amount of gas.</p>
+      </div>
+      <div>
+        <p>Each of these processes acts on a different grain size, so a fluid description with a single dust population cannot capture them. Following individual super-particles that carry their own grain size, stopping time and radiation-pressure coefficient makes the size dependence explicit, and lets the same machinery cover the gas-rich and gas-poor limits within one code.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="implementation">
+    <div class="eyebrow">Code architecture</div>
+    <h2>Implementation in FARGO3D</h2>
+    <p>The module is implemented at the setup level, leaving the FARGO3D core untouched, and separates initial conditions, gas evolution, particle dynamics, diagnostics and post-processing so that each component can be tested on its own.</p>
+    <div class="architecture" aria-label="Numerical workflow">
+      <div class="node"><strong>Initial conditions</strong><br>star, planet, gas disc, parent belt</div>
+      <div class="node"><strong>Gas evolution</strong><br>FARGO3D hydrodynamics, viscosity, planet torques</div>
+      <div class="node"><strong>Particle module</strong><br>drag, radiation pressure, gravity, collisions</div>
+      <div class="node"><strong>Diagnostics</strong><br>orbital elements, resonant angles, mass budget, error metrics</div>
+      <div class="node"><strong>Observables</strong><br>size-resolved dust maps and synthetic images</div>
+    </div>
+    <div class="grid grid-2" style="margin-top:.8rem">
+      <article class="card"><span class="tag complete">Implemented</span><h3>Super-particle dynamics</h3><p>A semi-analytical, drag-implicit integrator in a kick–drift–kick arrangement, stable for arbitrarily small Stokes numbers, with an angular-momentum-conserving azimuthal drift and staggered cloud-in-cell interpolation of the gas fields.</p></article>
+      <article class="card"><span class="tag complete">Implemented</span><h3>Gas–dust coupling</h3><p>Size-dependent stopping times computed from the local gas state, and momentum-conserving back-reaction deposited onto the gas through the same interpolation kernel used to sample it (NGP, CIC or TSC).</p></article>
+      <article class="card"><span class="tag complete">Implemented</span><h3>Radiation pressure</h3><p>A size-dependent radiation-pressure coefficient reduces the effective stellar gravity for each grain, so that the blow-out size and the eccentric halo of small grains emerge from the dynamics rather than being imposed.</p></article>
+      <article class="card"><span class="tag complete">Implemented</span><h3>CPU, GPU and MPI</h3><p>A CUDA backend mirrors the CPU integrator, and the particle array is domain-decomposed with migration between neighbouring subdomains, so particles live on the rank that owns the gas they interact with.</p></article>
+    </div>
+    <div class="grid grid-2" style="margin-top:.7rem">
+      <article class="card"><span class="tag progress">In development</span><h3>Collisional evolution</h3><p>A representative-particle Monte-Carlo collision model with sticking, fragmentation and erosion, run on adaptive equal-count collision cells so that the sampling automatically refines where dust concentrates. The collision operator itself is verified against analytic solutions; coupling it into the production disc module is in progress.</p></article>
+      <article class="card"><span class="tag progress">In development</span><h3>Dust production from a planetesimal belt</h3><p>A stirred parent belt that injects fresh fragments at a prescribed production rate with a collisional size distribution, while grains lost to blow-out or drift are removed, so that the population can settle into a steady state.</p></article>
+      <article class="card"><span class="tag progress">In development</span><h3>Radiative-transfer post-processing</h3><p>Translation of the size-resolved particle distribution into images and visibilities for direct comparison with millimetre and scattered-light data.</p></article>
+      <article class="card"><span class="tag planned">Planned</span><h3>Released documentation</h3><p>A public description of the module, reproducible test configurations and archived benchmark data, to accompany the first science application.</p></article>
+    </div>
+  </section>
+
+  <section class="panel" id="validation">
+    <div class="eyebrow">Verification and precision</div>
+    <h2>Validation programme</h2>
+    <p>Every component is tied to an analytic solution, a published benchmark, or a controlled convergence experiment, so that numerical claims can be traced to a quantitative error metric rather than to a qualitative impression. The table below records the current state of that programme.</p>
+    <table class="test-table">
+      <thead><tr><th>Test</th><th>What it verifies</th><th>Benchmark</th><th>Result</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Restricted three-body problem</td>
+          <td>Stellar gravity, the planet term and the rotating frame, without gas.</td>
+          <td>Conservation of the Jacobi constant.</td>
+          <td class="metric">Median fractional drift of a few times 10<sup>−5</sup> over 20 orbits.</td>
+          <td><span class="tag complete">Validated</span></td>
+        </tr>
+        <tr>
+          <td>Radial drift</td>
+          <td>Drag-induced migration in a sub-Keplerian power-law disc.</td>
+          <td>Analytic terminal drift of Nakagawa, Sekiya &amp; Hayashi (1986).</td>
+          <td class="metric">Radial and azimuthal velocities recovered across four decades in Stokes number, with median fractional error below 10<sup>−3</sup>.</td>
+          <td><span class="tag complete">Validated</span></td>
+        </tr>
+        <tr>
+          <td>Radiation-pressure-modified drift</td>
+          <td>Size-dependent reduction of the effective gravity and of the headwind.</td>
+          <td>Analytic drift law with a radiation-pressure coefficient.</td>
+          <td class="metric">Drift reverses sign below the predicted turn-around size for essentially all grains; velocities follow the analytic law.</td>
+          <td><span class="tag complete">Validated</span></td>
+        </tr>
+        <tr>
+          <td>Trapping at a pressure maximum</td>
+          <td>Drift in a non-trivial gas structure rather than a smooth power law.</td>
+          <td>Position of the gas pressure maximum.</td>
+          <td class="metric">The dust surface density sharpens onto the pressure maximum and the mass-weighted median radius converges to it.</td>
+          <td><span class="tag complete">Validated</span></td>
+        </tr>
+        <tr>
+          <td>Stopping-time relaxation and feedback</td>
+          <td>The drag operator and the momentum book-keeping of the back-reaction in a closed box.</td>
+          <td>Exact exponential relaxation and the conserved centre-of-mass velocity.</td>
+          <td class="metric">Analytic solution reproduced; total momentum conserved to machine precision.</td>
+          <td><span class="tag complete">Validated</span></td>
+        </tr>
+        <tr>
+          <td>Multi-species drift with back-reaction</td>
+          <td>The full gas + dust steady state at finite dust-to-gas ratio, with the gas responding to the deposited momentum.</td>
+          <td>Multi-species drift solution of Benítez-Llambay, Krapp &amp; Pessah (2019).</td>
+          <td class="metric">Agreement swept independently over interpolation kernel, grid resolution, particle number and dust-to-gas ratio, including a formula-free momentum identity.</td>
+          <td><span class="tag complete">Validated</span></td>
+        </tr>
+        <tr>
+          <td>Linear streaming instability</td>
+          <td>Collective gas–dust coupling in the linear regime.</td>
+          <td>Published linear growth rates for standard streaming-instability modes.</td>
+          <td class="metric">Growth rate of the fast mode recovered from the particle representation.</td>
+          <td><span class="tag complete">Validated</span></td>
+        </tr>
+        <tr>
+          <td>Interpolation and deposition</td>
+          <td>Kernel weights, interpolation accuracy and normalisation of the deposited impulse.</td>
+          <td>Analytic kernel weights; RMS errors over randomised particle positions.</td>
+          <td class="metric">NGP, CIC and TSC compared directly; deposition normalisation exact.</td>
+          <td><span class="tag complete">Validated</span></td>
+        </tr>
+        <tr>
+          <td>Collisional coagulation</td>
+          <td>The Monte-Carlo collision operator, independently of the disc physics.</td>
+          <td>Exact Smoluchowski solutions for analytic kernels.</td>
+          <td class="metric">Full mass spectra reproduced by the standalone operator; particle number and total dust mass conserved to machine precision. The in-module benchmark is still to be run.</td>
+          <td><span class="tag progress">In progress</span></td>
+        </tr>
+        <tr>
+          <td>Fragmentation barrier</td>
+          <td>Physical relative velocities combined with fragmentation and erosion.</td>
+          <td>Fragmentation- and drift-limited grain sizes of Birnstiel et al. (2011, 2012).</td>
+          <td class="metric">Both limiting regimes reproduced, with erosion setting the barrier height as expected from established coagulation codes; the debris-disc regime is still to be covered.</td>
+          <td><span class="tag progress">In progress</span></td>
+        </tr>
+        <tr>
+          <td>Cross-code comparison</td>
+          <td>An independent implementation of the same representative-particle method.</td>
+          <td>A published Monte-Carlo coagulation code.</td>
+          <td class="metric">Unit conventions and total dust masses agree on a reduced problem; the production-scale comparison is running.</td>
+          <td><span class="tag progress">In progress</span></td>
+        </tr>
+        <tr>
+          <td>Resonant trapping by a migrating planet</td>
+          <td>Capture into mean-motion resonance and the dependence of the libration width on grain size.</td>
+          <td>Analytic resonant-trapping library for debris discs; published capture-probability criteria.</td>
+          <td class="metric">Gas-free baseline configured to match the published parameters; quantitative comparison under way.</td>
+          <td><span class="tag progress">In progress</span></td>
+        </tr>
+        <tr>
+          <td>Forward modelling</td>
+          <td>Translation of the dynamical state into observable morphology.</td>
+          <td>Radiative-transfer post-processing.</td>
+          <td class="metric">Prototype pipeline in place.</td>
+          <td><span class="tag progress">In development</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="legend">
+      <div><span class="tag complete">Validated</span> quantitative agreement with an analytic solution or published benchmark</div>
+      <div><span class="tag progress">In progress</span> test configured, result not yet final</div>
+      <div><span class="tag planned">Planned</span> scheduled, not yet started</div>
+    </div>
+    <div class="slot-row">
+      <div class="result-slot"><div><strong>Drift benchmark</strong><br>Terminal radial and azimuthal velocity versus Stokes number, against the analytic solution.</div></div>
+      <div class="result-slot"><div><strong>Radiation pressure</strong><br>Drift reversal below the turn-around grain size.</div></div>
+      <div class="result-slot"><div><strong>Collisional evolution</strong><br>Mass spectra against exact solutions and the fragmentation-limited grain size.</div></div>
+    </div>
+    <p class="note">Figures will be added as the corresponding benchmark runs are finalised. Entries are only moved to <em>Validated</em> once a quantitative error metric exists, so that implemented capability is never conflated with demonstrated accuracy.</p>
+  </section>
+
+  <section class="panel" id="debris">
+    <div class="eyebrow">Flagship application</div>
+    <h2>The debris-disc setup</h2>
+    <p>The debris-disc configuration assembles the individual components into a single, self-consistent system: a stirred belt of parent bodies feeds a collisional cascade, radiation pressure sorts the fragments by size, a planet perturbs them, and whatever gas is present damps their eccentricities. It is designed to start from an empty disc and settle into a steady state in which production, blow-out and drift balance.</p>
+    <div class="grid grid-2" style="margin-top:.9rem">
+      <article class="card"><h3>Parent belt as a dust source</h3><p>Fresh fragments are released on the orbits of their parent bodies at a prescribed production rate, with a collisional size distribution and a velocity dispersion set by the stirring of the belt. The number of active super-particles is a resolution knob, decoupled from the physical production rate.</p></article>
+      <article class="card"><h3>Size sorting by radiation pressure</h3><p>Because each grain carries its own radiation-pressure coefficient, the classic debris-disc signature emerges without being prescribed: large grains stay in a narrow ring at the belt, intermediate grains populate an extended eccentric halo, and grains below the blow-out size are promptly removed.</p></article>
+      <article class="card"><h3>Collisional cascade in the gas-poor regime</h3><p>In a gas-poor disc the collision speed is set by the orbital velocity dispersion rather than by differential drag. The collision model therefore uses the grains' actual peculiar velocities, which is what allows a cascade to operate at all when the grains are essentially decoupled from the gas.</p></article>
+      <article class="card"><h3>Planets, resonances and residual gas</h3><p>A migrating planet sweeps grains into mean-motion resonances, producing the azimuthal structure seen in resolved images. Radiation pressure limits which grain sizes stay trapped, and even a modest gas reservoir damps eccentricities and can smear the resonant clumps — the specific question the setup was built to answer.</p></article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="eyebrow">Numerical credibility</div>
+    <h2>What accompanies every production result</h2>
+    <div class="grid grid-3">
+      <article class="card"><h3>Configuration</h3><ul><li>code version</li><li>setup parameter file</li><li>grid and boundary conditions</li><li>particle sampling</li></ul></article>
+      <article class="card"><h3>Precision statement</h3><ul><li>time-step criterion</li><li>resolution study</li><li>error or conservation metric</li><li>duration in orbital units</li></ul></article>
+      <article class="card"><h3>Reproducibility</h3><ul><li>run script and hardware</li><li>random seed where relevant</li><li>analysis notebook</li><li>archived figure data</li></ul></article>
+    </div>
+  </section>
+
+  <section class="panel" id="applications">
+    <div class="eyebrow">Scientific applications</div>
+    <h2>Questions enabled by the module</h2>
+    <div class="grid grid-2">
+      <article class="card"><h3>Planet–disc interaction</h3><p>How planets sculpt rings, gaps, eccentric structures, azimuthal asymmetries and resonantly trapped grain populations, and which grain sizes retain the imprint.</p></article>
+      <article class="card"><h3>Gas in debris discs</h3><p>How even a modest gas reservoir alters dust transport, concentration, resonant trapping and the survival of observable structure.</p></article>
+      <article class="card"><h3>Dust production and size dependence</h3><p>How a dynamically evolving, collisionally active parent population connects to the smaller grains actually traced at optical, infrared and millimetre wavelengths.</p></article>
+      <article class="card"><h3>Observation-facing predictions</h3><p>How dynamical models translate into morphology and wavelength-dependent asymmetries that can be confronted with ALMA, JWST and scattered-light imaging.</p></article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="eyebrow">Availability</div>
+    <h2>Code, documentation and outputs</h2>
+    <p>The module is under active development and is not yet public. A description of the implementation, reproducible test configurations and archived benchmark data will accompany the first science application; until then these are listed as forthcoming rather than presented as openly available.</p>
+    <div class="actions"><span class="btn disabled">Repository — forthcoming</span><span class="btn disabled">Validation notebooks — forthcoming</span><a class="btn" href="index.html#research">Back to research overview</a></div>
+  </section>
+</main>
+<footer>© <span id="year"></span> Philipp Weber · FARGO3D Lagrangian dust module · Technical project page</footer>
+</div>
+<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+</body>
+</html>
